@@ -9,7 +9,7 @@ export class UserRepo {
   }
 
   public static async getUserByEmail(email: string) {
-    const user = await Mongo.users().findOne({ email: "example@gmail.com" });
+    const user = await Mongo.users().findOne({ email: email });
 
     return user;
   }

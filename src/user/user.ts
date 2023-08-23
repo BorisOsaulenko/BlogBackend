@@ -4,9 +4,10 @@ export interface User {
   email: string;
   password: string;
   type: Type[];
+  followers: User[];
+  avatars: string[];
   name: string;
   surname: string;
-  avatars: string[];
 }
 
 export enum Type {

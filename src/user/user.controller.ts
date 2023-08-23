@@ -1,7 +1,7 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { UserService } from "./user.service";
 import HttpException from "../error/error";
-import { Type, User } from "./user";
+import { Type } from "./user";
 
 export class UserController {
   public router = Router();
@@ -14,7 +14,7 @@ export class UserController {
 
   login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.query;
-    UserService.login(email as string, password as string, res, next);
+    res.json(await UserService.login(email as string, password as string));
     // logged in account is stored on the client side, this is just checking credentials
   };
 
@@ -34,6 +34,7 @@ export class UserController {
           email: email as string,
           password: password as string,
           type: [Type.USER],
+          followers: [],
           avatars: [...avatars],
           name: name,
           surname: surname,
@@ -43,6 +44,6 @@ export class UserController {
   };
 
   deleteUser = async (req: Request, res: Response, next: NextFunction) => {
-    res.json(await UserService.delete(req.body.email, next));
+    res.json(await UserService.delete(req.body.email, req.body.password));
   };
 }

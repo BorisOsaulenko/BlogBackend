@@ -10,31 +10,46 @@ export class UserService {
   public static async createNewUser(userParams: User) {
     if (!(validator.validate(userParams.email) && userParams.password !== ""))
       throw new HttpException(400, "Bad request");
-    if (!(await Mongo.users().findOne({ email: userParams.email })))
-      return await Mongo.users().insertOne({ ...userParams });
-    else
+    if (await Mongo.users().findOne({ email: userParams.email }))
       throw new HttpException(
         400,
         "User with email " + userParams.email + " already exists"
       );
+    if ((await Mongo.users().insertOne({ ...userParams })).acknowledged)
+      return { status: 200, message: "Sign up successfull" };
   }
 
-  public static async login(
-    email: string,
-    password: string,
-    res: Response,
-    next: NextFunction
-  ) {
-    if (validator.validate(email) && password !== "") {
-      const user = await UserRepo.getUserByEmail(email as string);
+  public static async login(email: string, password: string) {
+    if (!(validator.validate(email) && password !== ""))
+      throw new HttpException(400, "Bad request");
 
-      if (user !== null && user.password === password) {
-        res.json({ user: user });
-      } else next(new HttpException(401, "Wrong password"));
-    } else next(new HttpException(400, "Bad request"));
+    const user = await UserRepo.getUserByEmail(email);
+
+    if (user === null)
+      throw new HttpException(
+        400,
+        "User with email " + email + " already exists"
+      );
+
+    if (user.password !== password)
+      throw new HttpException(400, "Wrong password");
+
+    return { status: 200, message: "Logged in successfully", user: user };
   }
 
-  public static async delete(email: string, next: NextFunction) {
-    return await Mongo.users().deleteOne({ email: email });
+  public static async delete(email: string, password: string) {
+    if ((await UserRepo.getUserByEmail(email)) === null)
+      throw new HttpException(
+        400,
+        "User with email " + email + " does not exists"
+      );
+
+    if ((await UserRepo.getUserByEmail(email))?.password !== password)
+      throw new HttpException(400, "Wrong password");
+    if (
+      (await Mongo.users().deleteOne({ email: email, password: password }))
+        .deletedCount !== 0
+    )
+      return { status: 200, message: "Deleted successfully" };
   }
 }
