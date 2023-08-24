@@ -1,5 +1,5 @@
 import { NextFunction } from "express-serve-static-core";
-import HttpException from "../error/error";
+import HttpException from "../responseSender/clientResponse";
 import { Mongo } from "../mongo";
 import { User } from "./user";
 import { UserRepo } from "./user.repository";
@@ -28,7 +28,7 @@ export class UserService {
     if (user === null)
       throw new HttpException(
         400,
-        "User with email " + email + " already exists"
+        "User with email " + email + " does not exists"
       );
 
     if (user.password !== password)

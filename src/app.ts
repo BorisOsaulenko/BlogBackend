@@ -5,7 +5,7 @@ import { config } from "dotenv";
 import { UserController } from "./user/user.controller";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { errorMiddleware } from "./error/error.handler";
+import { responseSenderMiddleware } from "./responseSender/responseSender";
 
 config();
 
@@ -17,7 +17,8 @@ const app = express()
   .use(bodyParser.json())
   .use(express.json())
   .use("/", controllers)
-  .use(errorMiddleware);
+  // more controllers
+  .use(responseSenderMiddleware);
 
 Mongo.connect(process.env.DB_URL as string)
   .then(() =>
