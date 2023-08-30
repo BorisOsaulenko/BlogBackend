@@ -3,14 +3,15 @@ import { Document } from "mongodb";
 export interface User {
   email: string;
   password: string;
-  type: Type[];
-  followers: User[];
+  type: UserType[];
+  followers: string[];
+  userFollows: string[];
   avatars: string[];
   name: string;
   surname: string;
 }
 
-export enum Type {
+export enum UserType {
   USER = "USER",
   ADMIN = "ADMIN",
 }

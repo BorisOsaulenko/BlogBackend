@@ -1,9 +1,10 @@
 import { userInfo } from "os";
 import { Mongo } from "../mongo";
+import { ObjectId } from "mongodb";
 
 export class UserRepo {
-  public static async getUserById(id: number) {
-    const user = await Mongo.users().findOne({ id: id });
+  public static async getUserById(id: ObjectId) {
+    const user = await Mongo.users().findOne({ _id: id });
 
     return user;
   }

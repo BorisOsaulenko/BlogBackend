@@ -1,15 +1,22 @@
 import "express-async-errors";
-import express from "express";
 import { Mongo } from "./mongo";
 import { config } from "dotenv";
 import { UserController } from "./user/user.controller";
-import cors from "cors";
-import bodyParser from "body-parser";
 import { errorMiddleware } from "./error/error.handler";
+import { PostController } from "./post/post.controller";
+import { TagController } from "./Tag/tag.controller";
+
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 config();
 
-const controllers = [new UserController()].map((c) => c.router);
+const controllers = [
+  new UserController(),
+  new PostController(),
+  new TagController(),
+].map((c) => c.router);
 
 const app = express()
   .use(cors())
