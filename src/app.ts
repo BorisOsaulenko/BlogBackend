@@ -2,10 +2,10 @@ import "express-async-errors";
 import express from "express";
 import { Mongo } from "./mongo";
 import { config } from "dotenv";
-import { UserController } from "./user/user.controller";
+import { UserController } from "./user/controller/controller";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { responseSenderMiddleware } from "./responseSender/responseSender";
+import { errorMiddleware } from "./customError/errorMiddleware";
 
 config();
 
@@ -17,10 +17,10 @@ const app = express()
   .use(bodyParser.json())
   .use(express.json())
   .use("/", controllers)
-  // more controllers
-  .use(responseSenderMiddleware);
 
-Mongo.connect(process.env.DB_URL as string)
+  .use(errorMiddleware);
+
+Mongo.connect(process.env.DB_URL!)
   .then(() =>
     app.listen(process.env.PORT || 3000, () =>
       console.log("Server started on port: " + process.env.PORT || 3000)

@@ -1,16 +1,11 @@
-import { Document } from "mongodb";
-
 export interface User {
   email: string;
   password: string;
-  type: Type[];
-  followers: User[];
-  avatars: string[];
-  name: string;
-  surname: string;
+  roles: Role[];
+  createdAt: Date;
 }
 
-export enum Type {
+export enum Role {
   USER = "USER",
   ADMIN = "ADMIN",
 }

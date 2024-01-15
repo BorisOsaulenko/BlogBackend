@@ -1,7 +1,7 @@
 import { Db, Document, MongoClient } from "mongodb";
 import { User } from "./user/user";
 
-const users = "Users";
+const users = "users";
 
 export class Mongo {
   public static mongo: Db;
