@@ -1,8 +1,6 @@
 import { Response, Request, Router, NextFunction } from "express";
-import { UserService } from "../service/UserService";
-import { loginRequest } from "./zodRequests/login";
-import { registerRequest } from "./zodRequests/register";
-import { updateRequest } from "./zodRequests/update";
+import { UserService } from "../service/service";
+import { userRequests } from "./requests/userRequests";
 
 export class UserController {
   public router = Router();
@@ -16,7 +14,7 @@ export class UserController {
   createNewUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
 
-    const user = await registerRequest.parseAsync({
+    const user = await userRequests.registerRequest.parseAsync({
       email,
       password,
     });
@@ -28,7 +26,7 @@ export class UserController {
   login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.query;
 
-    const credentials = loginRequest.parse({ email, password });
+    const credentials = userRequests.loginRequest.parse({ email, password });
     const user = await UserService.login(
       credentials.email,
       credentials.password
@@ -38,7 +36,7 @@ export class UserController {
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, update } = req.body;
-    const newCredentials = await updateRequest.parseAsync({
+    const newCredentials = await userRequests.updateRequest.parseAsync({
       email: update.email,
       password: update.password,
     });

@@ -1,7 +1,10 @@
 import { Db, Document, MongoClient } from "mongodb";
 import { User } from "./user/user";
+import { Profile } from "./profile/profile";
 
 const users = "users";
+const profiles = "profiles";
+const posts = "posts";
 
 export class Mongo {
   public static mongo: Db;
@@ -10,6 +13,8 @@ export class Mongo {
     return MongoClient.connect(url).then((c) => (this.mongo = c.db()));
   }
   public static users = () => Mongo.collection<User>(users);
+  public static profiles = () => Mongo.collection<Profile>(profiles);
+  public static posts = () => Mongo.collection<any>(posts); // todo: change to post interface
   private static collection = <T extends Document>(name: string) =>
     Mongo.mongo.collection<T>(name);
 }

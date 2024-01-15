@@ -3,13 +3,16 @@ import express from "express";
 import { Mongo } from "./mongo";
 import { config } from "dotenv";
 import { UserController } from "./user/controller/controller";
+import { ProfileController } from "./profile/controller/controller";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { errorMiddleware } from "./customError/errorMiddleware";
 
 config();
 
-const controllers = [new UserController()].map((c) => c.router);
+const controllers = [new UserController(), new ProfileController()].map(
+  (c) => c.router
+);
 
 const app = express()
   .use(cors())
