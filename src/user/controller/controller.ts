@@ -31,6 +31,7 @@ export class UserController {
       credentials.email,
       credentials.password
     );
+
     res.json(user);
   };
 
@@ -48,6 +49,6 @@ export class UserController {
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     const user = await UserService.deleteUser(email, password);
-    res.json(user);
+    res.json(user); //todo: delete profile after deleting user
   };
 }

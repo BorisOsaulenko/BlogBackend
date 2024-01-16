@@ -7,18 +7,23 @@ import { ProfileController } from "./profile/controller/controller";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { errorMiddleware } from "./customError/errorMiddleware";
+import fileUpload from "express-fileupload";
+import { PostController } from "./post/controller/controller";
 
 config();
 
-const controllers = [new UserController(), new ProfileController()].map(
-  (c) => c.router
-);
+const controllers = [
+  new UserController(),
+  new ProfileController(),
+  new PostController(),
+].map((c) => c.router);
 
 const app = express()
   .use(cors())
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
   .use(express.json())
+  .use(fileUpload())
   .use("/", controllers)
 
   .use(errorMiddleware);

@@ -12,6 +12,7 @@ export class ProfileController {
     this.router.delete("/profile", this.delete);
   }
   create = async (req: Request, res: Response, next: NextFunction) => {
+    //todo: unique profile name
     const { email, password } = req.body;
 
     const profile = profileRequests.create.parse(req.body);
