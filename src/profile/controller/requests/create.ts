@@ -1,9 +1,15 @@
 import z from "zod";
+import { getProfileByName } from "../../repository/getProfileByName";
 
 export const create = z.object({
   name: z
     .string({ required_error: "Name is required" })
-    .min(2, { message: "Name must be at least 2 characters long" }),
+    .min(2, { message: "Name must be at least 2 characters long" })
+    .refine(async (name) => {
+      const profile = await getProfileByName(name);
+      if (profile) return false;
+      return true;
+    }, "Profile with this name already exists"),
   avatarURL: z
     .string({ required_error: "Avatar URL is required" })
     .url({ message: "Invalid URL" })

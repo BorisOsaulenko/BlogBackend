@@ -1,17 +1,16 @@
 import { CustomError } from "../../../customError/error";
 import { Mongo } from "../../../mongo";
-import { checkCredentials } from "../../../user/utils/checkCredentials";
-import {
-  Profile,
-  profileFieldsProvidedByUser as profileFieldsProvidedByUser,
-} from "../../profile";
+import { checkCredentials } from "../../../utils/checkCredentials";
+import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
+import { profileFieldsProvidedByUser as profileFieldsProvidedByUser } from "../../profile";
 import { getProfileByEmail } from "../../repository/getProfileByEmail";
 
 export const create = async (
-  email: string,
-  password: string,
+  token: string | undefined,
   profile: profileFieldsProvidedByUser
 ) => {
+  const { email, password } = validateAuthTokenSignature(token);
+
   const user = await checkCredentials(email, password);
   if (!user) throw new CustomError(401, "User not found");
   if (await getProfileByEmail(email))

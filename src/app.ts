@@ -9,6 +9,7 @@ import bodyParser from "body-parser";
 import { errorMiddleware } from "./customError/errorMiddleware";
 import fileUpload from "express-fileupload";
 import { PostController } from "./post/controller/controller";
+import { CommentController } from "./comment/controller/controller";
 
 config();
 
@@ -16,6 +17,7 @@ const controllers = [
   new UserController(),
   new ProfileController(),
   new PostController(),
+  new CommentController(),
 ].map((c) => c.router);
 
 const app = express()

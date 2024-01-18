@@ -1,5 +1,5 @@
 import z from "zod";
-import { checkDoesUserExists } from "../../../user/utils/checkDoesUserExists";
+import { checkDoesUserExists } from "../../../utils/checkDoesUserExists";
 
 export const get = z.object({
   email: z

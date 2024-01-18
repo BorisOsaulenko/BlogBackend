@@ -1,7 +1,7 @@
 import { tags } from "./tags";
 
 export interface Post {
-  authorId: string;
+  authorName: string;
   media: string[];
   likes: string[];
   type: PostType;
@@ -9,6 +9,7 @@ export interface Post {
   views: number;
   tags: string[];
   posted: Date;
+  authorAvatar?: string;
 }
 
 export interface postFieldsProvidedByUser {

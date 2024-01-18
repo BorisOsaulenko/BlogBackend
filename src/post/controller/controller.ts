@@ -1,7 +1,7 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { PostService } from "../service/service";
 import { postRequests } from "./requests/postRequests";
-import { getPostsByFilter } from "../repository/getPostsByFilter";
+import { getPostsByFilter } from "../repository/getPostsByFilter/getPostsByFilter";
 
 export class PostController {
   public router = Router();
@@ -13,15 +13,16 @@ export class PostController {
   }
 
   create = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
 
     const post = postRequests.create.parse(req.body);
-    const createdPost = await PostService.create(email, password, post);
+    const createdPost = await PostService.create(token, post);
     res.json(createdPost);
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
-    const { tags, author, posted, sortBy } = req.query;
+    const token = req.headers.authorization?.split(" ")[1];
+    const { tags, author, posted, sortBy } = req.query; // author is profile name
     const { paginationIdx } = req.params;
 
     const filter = postRequests.filter.parse({
@@ -31,7 +32,7 @@ export class PostController {
       sortBy,
     });
 
-    const posts = await getPostsByFilter(filter);
+    const posts = await getPostsByFilter(token, filter);
 
     res.json(
       posts.slice(Number(paginationIdx) * 20, Number(paginationIdx) * 20 + 20)
@@ -39,15 +40,17 @@ export class PostController {
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, postId } = req.body;
+    const { postId } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
     const post = postRequests.update.parse(req.body);
-    const updatedPost = await PostService.update(email, password, postId, post);
+    const updatedPost = await PostService.update(token, postId, post);
     res.json(updatedPost);
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, postId } = req.body;
-    const deletedPost = await PostService.deletePost(email, password, postId);
+    const { postId } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+    const deletedPost = await PostService.deletePost(token, postId);
     res.json(deletedPost);
   };
 }

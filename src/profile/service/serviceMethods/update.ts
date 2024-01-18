@@ -1,20 +1,34 @@
 import { CustomError } from "../../../customError/error";
 import { Mongo } from "../../../mongo";
-import { checkCredentials } from "../../../user/utils/checkCredentials";
+import { checkCredentials } from "../../../utils/checkCredentials";
+import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
 import { profileFieldsProvidedByUser } from "../../profile";
+import { getProfileByEmail } from "../../repository/getProfileByEmail";
 
 export const update = async (
-  email: string,
-  password: string,
-  profile: Partial<profileFieldsProvidedByUser>
+  token: string | undefined,
+  update: Partial<profileFieldsProvidedByUser>
 ) => {
+  const { email, password } = validateAuthTokenSignature(token);
   const user = await checkCredentials(email, password);
-  if (!user) throw new CustomError(401, "User not found");
+  const profile = await getProfileByEmail(email);
+  if (!profile) throw new CustomError(404, "Profile not found");
+
+  Mongo.posts().updateMany(
+    { authorName: profile.name },
+    {
+      $set: {
+        authorName: update.name,
+        authorAvatarURL: update.avatarURL,
+      },
+    }
+  );
   const updatedProfile = await Mongo.profiles().updateOne(
     { userId: String(user._id) },
     {
-      $set: profile,
+      $set: update,
     }
   );
+
   return updatedProfile;
 };

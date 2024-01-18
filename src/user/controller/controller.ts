@@ -1,6 +1,7 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { UserService } from "../service/service";
 import { userRequests } from "./requests/userRequests";
+import jwt from "jsonwebtoken";
 
 export class UserController {
   public router = Router();
@@ -19,8 +20,9 @@ export class UserController {
       password,
     });
 
-    const newUser = await UserService.register(user);
-    res.json(newUser);
+    UserService.register(user).then(() => {
+      res.json(jwt.sign(user, process.env.JWT_SECRET as string));
+    });
   };
 
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -32,23 +34,23 @@ export class UserController {
       credentials.password
     );
 
-    res.json(user);
+    res.json(jwt.sign(user, process.env.JWT_SECRET as string));
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, update } = req.body;
-    const newCredentials = await userRequests.updateRequest.parseAsync({
-      email: update.email,
-      password: update.password,
-    });
+    const token = req.headers["authorization"]?.split(" ")[1] as string;
+    const newCredentials = await userRequests.updateRequest.parseAsync(
+      req.body
+    );
 
-    const user = await UserService.update(email, password, newCredentials);
+    const user = await UserService.update(token, newCredentials);
     res.json(user);
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
-    const user = await UserService.deleteUser(email, password);
-    res.json(user); //todo: delete profile after deleting user
+    const token = req.headers["authorization"]?.split(" ")[1] as string;
+    const user = await UserService.deleteUser(token);
+    res.removeHeader("authorization");
+    res.json(user);
   };
 }

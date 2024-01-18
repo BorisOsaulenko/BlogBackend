@@ -1,5 +1,5 @@
 import z from "zod";
-import { checkDoesUserExists } from "../../utils/checkDoesUserExists";
+import { checkDoesUserExists } from "../../../utils/checkDoesUserExists";
 
 export const updateRequest = z
   .object({
@@ -8,7 +8,8 @@ export const updateRequest = z
       .email("Invalid email")
       .refine(async (email) => !(await checkDoesUserExists(email)), {
         message: "User already exists",
-      }),
+      })
+      .optional(),
     password: z
       .string({ required_error: "Password is required" })
       .min(8, "Password must be at least 8 characters long")
@@ -18,9 +19,9 @@ export const updateRequest = z
       .regex(
         /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/,
         "Password must contain at least one special character"
-      ),
+      )
+      .optional(),
   })
-  .partial()
   .superRefine((req, ctx) => {
     if (!req?.email && !req?.password) {
       ctx.addIssue({

@@ -1,0 +1,14 @@
+# Questions:
+
+1. How do i check does email exists - activation link
+2. patch vs put request logic - patch direct fields, put for whole object - done
+3. proper way to save tags - own tag db + user tags
+4. proper way to save media:
+    1. sign url (depends on deploy platform)
+    2. jwt token
+5. proper way to save user + jwt tokens: 
+ firebase auth 
+6. post-user and comment-post connection
+7. how do i put dates in get requests?
+date js
+8. proper way to increase views

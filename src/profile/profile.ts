@@ -4,6 +4,7 @@ export interface Profile {
   followers: string[];
   following: string[];
   createdAt: Date;
+
   avatarURL?: string;
   livePlace?: string;
   birthdate?: Date;

@@ -1,18 +1,15 @@
-import { checkCredentials } from "../../utils/checkCredentials";
+import { checkCredentials } from "../../../utils/checkCredentials";
 import { Mongo } from "../../../mongo";
-import { checkDoesUserExists } from "../../utils/checkDoesUserExists";
 import { CustomError } from "../../../customError/error";
+import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
 
 interface credentials {
   email?: string;
   password?: string;
 }
 
-export const update = async (
-  email: string,
-  password: string,
-  updateCredentials: credentials
-) => {
+export const update = async (token: string, updateCredentials: credentials) => {
+  const { email, password } = validateAuthTokenSignature(token);
   const user = await checkCredentials(email, password);
   if (!user) throw new CustomError(401, "Invalid credentials");
 

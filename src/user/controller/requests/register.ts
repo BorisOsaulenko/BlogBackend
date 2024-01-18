@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Role } from "../../user";
-import { checkDoesUserExists } from "../../utils/checkDoesUserExists";
+import { checkDoesUserExists } from "../../../utils/checkDoesUserExists";
 
 export const registerRequest = z.object({
   email: z
@@ -21,4 +21,5 @@ export const registerRequest = z.object({
     ),
   roles: z.array(z.nativeEnum(Role)).optional().default([Role.USER]),
   createdAt: z.date().optional().default(new Date()),
+  sponsors: z.array(z.string()).optional().default([]),
 });
