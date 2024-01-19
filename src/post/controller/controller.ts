@@ -2,6 +2,7 @@ import { Response, Request, Router, NextFunction } from "express";
 import { PostService } from "../service/service";
 import { postRequests } from "./requests/postRequests";
 import { getPostsByFilter } from "../repository/getPostsByFilter/getPostsByFilter";
+import moment from "moment";
 
 export class PostController {
   public router = Router();
@@ -15,7 +16,7 @@ export class PostController {
   create = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
 
-    const post = postRequests.create.parse(req.body);
+    const post = await postRequests.create.parseAsync(req.body);
     const createdPost = await PostService.create(token, post);
     res.json(createdPost);
   };
@@ -28,7 +29,7 @@ export class PostController {
     const filter = postRequests.filter.parse({
       tags,
       author,
-      posted,
+      posted: (posted as string[])?.map((p) => Number(p)), //timestamp
       sortBy,
     });
 

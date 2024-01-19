@@ -8,12 +8,14 @@ import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSign
 import { getUserByEmail } from "../../../user/repository/getUserByEmail";
 import { WithId } from "mongodb";
 import { postAccessTypeFilter } from "./postAccessTypeFilter";
+import { publicPart } from "./publicPart";
+import { checkCredentials } from "../../../utils/checkCredentials";
 
 interface filter {
   tags?: tags[];
   author?: string;
-  posted?: Date[];
-  sortBy: sortByEnum;
+  posted?: number[];
+  sortBy?: sortByEnum;
 }
 
 export const getPostsByFilter = async (
@@ -22,14 +24,17 @@ export const getPostsByFilter = async (
 ) => {
   const { tags, author, posted, sortBy } = filter;
 
-  const mongoFilter = await createMongoFilter(tags, author, posted);
+  const mongoFilter = createMongoFilter(tags, author, posted);
   const posts: WithId<Post>[] = await Mongo.posts().find(mongoFilter).toArray();
 
-  if (!token) return posts.filter((post) => post.type === PostType.PUBLIC);
-  const { email } = validateAuthTokenSignature(token);
-  const user = await getUserByEmail(email);
-  if (!user) return posts.filter((post) => post.type === PostType.PUBLIC);
+  if (!token)
+    return publicPart(posts.filter((post) => post.type === PostType.PUBLIC));
+  const { email, password } = validateAuthTokenSignature(token);
 
-  const sortedPosts = sort(posts, sortBy);
-  return await postAccessTypeFilter(sortedPosts, user);
+  const user = await getUserByEmail(email);
+  if (!user || user.password !== password || !user.isActive)
+    return publicPart(posts.filter((post) => post.type === PostType.PUBLIC));
+
+  const sortedPosts = sort(posts, sortBy || sortByEnum.popular);
+  return publicPart(postAccessTypeFilter(sortedPosts, user));
 };

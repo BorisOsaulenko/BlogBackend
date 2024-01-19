@@ -4,6 +4,7 @@ import { checkCredentials } from "../../../utils/checkCredentials";
 import { CustomError } from "../../../customError/error";
 import { getProfileByEmail } from "../../../profile/repository/getProfileByEmail";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
+import moment from "moment";
 
 export const create = async (
   token: string | undefined,
@@ -18,7 +19,7 @@ export const create = async (
     ...post,
     authorName: profile.name,
     authorAvatar: profile.avatarURL,
-    posted: new Date(),
+    posted: Date.now(),
     views: 0,
     likes: [],
     comments: [],

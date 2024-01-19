@@ -8,14 +8,18 @@ export interface Post {
   comments: string[];
   views: number;
   tags: string[];
-  posted: Date;
+  posted: number;
+  allowComments: boolean;
   authorAvatar?: string;
+  allowedUsers?: string[]; // for private posts
 }
 
 export interface postFieldsProvidedByUser {
   tags: tags[];
   media: string[];
   type: PostType;
+  allowComments: boolean;
+  allowedUsers?: string[];
 }
 
 export enum PostType {

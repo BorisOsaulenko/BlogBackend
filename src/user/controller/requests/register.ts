@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { Role } from "../../user";
 import { checkDoesUserExists } from "../../../utils/checkDoesUserExists";
 
 export const registerRequest = z.object({
@@ -19,7 +18,4 @@ export const registerRequest = z.object({
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/,
       "Password must contain at least one special character"
     ),
-  roles: z.array(z.nativeEnum(Role)).optional().default([Role.USER]),
-  createdAt: z.date().optional().default(new Date()),
-  sponsors: z.array(z.string()).optional().default([]),
 });

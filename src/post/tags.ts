@@ -12,3 +12,5 @@ export enum tags {
   "WORLD" = "World",
   "NATURE" = "Nature",
 }
+
+//todo: move tags to database

@@ -14,12 +14,12 @@ export const update = async (
   const profile = await getProfileByEmail(email);
   if (!profile) throw new CustomError(404, "Profile not found");
 
-  Mongo.posts().updateMany(
+  await Mongo.posts().updateMany(
     { authorName: profile.name },
     {
       $set: {
-        authorName: update.name,
-        authorAvatarURL: update.avatarURL,
+        authorName: update.name || profile.name,
+        authorAvatar: update.avatarURL || profile.avatarURL,
       },
     }
   );
