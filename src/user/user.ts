@@ -18,3 +18,5 @@ export enum Role {
   SPONSOR = "SPONSOR",
   ADMIN = "ADMIN",
 }
+
+// test for github actions
