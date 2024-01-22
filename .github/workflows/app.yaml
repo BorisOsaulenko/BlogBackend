@@ -1,0 +1,5 @@
+runtime: python39
+service: my-app
+handlers:
+- url: /.*
+  script: auto
