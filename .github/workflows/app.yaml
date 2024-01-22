@@ -1,5 +1,5 @@
 runtime: nodejs
-env: flex
+env: standard
 runtime_config:
   operating_system: ubuntu22
 # This sample incurs costs to run on the App Engine flexible environment.
