@@ -1,21 +1,20 @@
-import { tags } from "./tags";
+import { Comment } from "../comment/comment";
 
 export interface Post {
   authorName: string;
   media: string[];
   likes: string[];
   type: PostType;
-  comments: string[];
   views: number;
   tags: string[];
   posted: number;
   allowComments: boolean;
-  authorAvatar?: string;
+  authorAvatar: string;
   allowedUsers?: string[]; // for private posts
 }
 
 export interface postFieldsProvidedByUser {
-  tags: tags[];
+  tags: string[];
   media: string[];
   type: PostType;
   allowComments: boolean;

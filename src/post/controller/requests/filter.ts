@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { tags } from "../../tags";
 
 export enum sortByEnum {
   "latest" = "latest",
@@ -10,11 +9,9 @@ export enum sortByEnum {
 
 export const filter = z
   .object({
-    tags: z.array(
-      z.nativeEnum(tags, { errorMap: () => ({ message: "invalid tag" }) })
-    ),
+    tags: z.array(z.string().min(1)),
     posted: z.array(z.number()).length(2),
-    author: z.string(), //name
+    author: z.string().min(2), //name
     sortBy: z
       .nativeEnum(sortByEnum, {
         invalid_type_error:

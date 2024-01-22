@@ -12,3 +12,5 @@
 7. how do i put dates in get requests?
 date js
 8. proper way to increase views
+9. tag controller admin checking repeating
+10. comment - replies logic

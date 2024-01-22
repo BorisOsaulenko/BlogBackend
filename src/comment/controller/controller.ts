@@ -1,19 +1,36 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { commentRequests } from "./requests/commentRequests";
-import { CommentService } from "../service/commentService";
+import { CommentService } from "../service/service";
 
 export class CommentController {
   public router = Router();
-  constructor() {
+  private commentService: CommentService;
+  constructor(commentService: CommentService) {
+    this.commentService = commentService;
+
     this.router.post("/comment", this.create);
-    // this.router.get("/profile", this.get);
-    // this.router.patch("/profile", this.update);
-    // this.router.delete("/profile", this.delete);
+    this.router.patch("/comment", this.update);
+    this.router.delete("/profile", this.delete);
   }
 
   create = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, postId, content } = req.body;
-    const comment = CommentService.create(email, password, postId, content);
+    const { postId, content } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+    const comment = await this.commentService.create(postId, content, token);
+    res.json(comment);
+  };
+
+  update = async (req: Request, res: Response, next: NextFunction) => {
+    const { id, content } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+    const comment = await this.commentService.update(id, content, token);
+    res.json(comment);
+  };
+
+  delete = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.body;
+    const token = req.headers.authorization?.split(" ")[1];
+    const comment = await this.commentService.delete(id, token);
     res.json(comment);
   };
 }

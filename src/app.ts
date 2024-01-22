@@ -10,14 +10,21 @@ import { errorMiddleware } from "./customError/errorMiddleware";
 import fileUpload from "express-fileupload";
 import { PostController } from "./post/controller/controller";
 import { CommentController } from "./comment/controller/controller";
+import { UserService } from "./user/service/service";
+import { ProfileService } from "./profile/service/service";
+import { TagController } from "./tag/controller/controller";
+import { TagService } from "./tag/service/service";
+import { PostService } from "./post/service/service";
+import { CommentService } from "./comment/service/service";
 
 config();
 
 const controllers = [
-  new UserController(),
-  new ProfileController(),
-  new PostController(),
-  new CommentController(),
+  new UserController(new UserService()),
+  new TagController(new TagService()),
+  new ProfileController(new ProfileService()),
+  new PostController(new PostService()),
+  new CommentController(new CommentService()),
 ].map((c) => c.router);
 
 const app = express()

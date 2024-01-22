@@ -1,12 +1,13 @@
 import { Response, Request, Router, NextFunction } from "express";
-import { UserService } from "../service/service";
 import { userRequests } from "./requests/userRequests";
 import jwt from "jsonwebtoken";
+import { UserService } from "../service/service";
 
 export class UserController {
   public router = Router();
-
-  constructor() {
+  private userService: UserService;
+  constructor(userService: UserService) {
+    this.userService = userService;
     this.router.post("/user", this.createNewUser);
     this.router.get("/user", this.login);
     this.router.patch("/user", this.update);
@@ -29,19 +30,14 @@ export class UserController {
     const { email, password } = req.query;
 
     const credentials = userRequests.loginRequest.parse({ email, password });
-    const user = await UserService.login(
-      credentials.email,
-      credentials.password
-    );
+    const user = await UserService.login(credentials.email, credentials.password);
 
     res.json(jwt.sign(user, process.env.JWT_SECRET as string));
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"]?.split(" ")[1] as string;
-    const newCredentials = await userRequests.updateRequest.parseAsync(
-      req.body
-    );
+    const newCredentials = await userRequests.updateRequest.parseAsync(req.body);
 
     const user = await UserService.update(token, newCredentials);
     res.json(user);
@@ -49,7 +45,7 @@ export class UserController {
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"]?.split(" ")[1] as string;
-    const user = await UserService.deleteUser(token);
+    const user = await UserService.delete(token);
     res.removeHeader("authorization");
     res.json(user);
   };
@@ -58,11 +54,6 @@ export class UserController {
     const { email, code } = req.query;
 
     const user = await UserService.activation(code as string, email as string);
-    res
-      .header(
-        "authorization",
-        `Bearer ${jwt.sign(user, process.env.JWT_SECRET as string)}`
-      )
-      .redirect("/");
+    res.header("authorization", `Bearer ${jwt.sign(user, process.env.JWT_SECRET as string)}`).redirect("/");
   };
 }

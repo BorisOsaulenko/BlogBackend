@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { PostType } from "../../post";
-import { tags } from "../../tags";
-import { getUserByEmail } from "../../../user/repository/getUserByEmail";
+import { profileRepository } from "../../../profile/repository/profileRepository";
 
 export const create = z
   .object({
     tags: z
-      .array(z.nativeEnum(tags, { invalid_type_error: "invalid tag" }), {
+      .array(z.string().min(2), {
         required_error: "at least two tags are required",
       })
       .min(2, "at least two tags are required"),
@@ -26,7 +25,7 @@ export const create = z
         z
           .string()
           .email("invalid email")
-          .refine(async (email) => await getUserByEmail(email), {
+          .refine(async (email) => await profileRepository.getByEmail(email), {
             message: "user not found",
           })
       )

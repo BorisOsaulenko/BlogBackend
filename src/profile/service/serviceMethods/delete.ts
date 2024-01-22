@@ -1,11 +1,8 @@
-import { CustomError } from "../../../customError/error";
 import { Mongo } from "../../../mongo";
-import { checkCredentials } from "../../../utils/checkCredentials";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
+import { profileRepository } from "../../repository/profileRepository";
 
 export const deleteProfile = async (token: string | undefined) => {
-  const { email, password } = validateAuthTokenSignature(token);
-  const user = await checkCredentials(email, password);
-  if (!user) throw new CustomError(401, "User not found");
-  return Mongo.profiles().deleteOne({ userId: String(user._id) });
+  const user = await validateAuthTokenSignature(token);
+  return await profileRepository.deleteByEmail(user.email);
 };

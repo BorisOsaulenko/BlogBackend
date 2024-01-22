@@ -1,7 +1,10 @@
 export interface Comment {
   postId: string;
-  authorId: string;
+  authorName: string;
+  authorAvatar?: string;
   content: string;
-  likes: string[];
-  createdAt: Date;
+  likes: number;
+  dislikes: number;
+  createdAt: number; //timestamp
+  replies: Comment[]; //answers to the comment
 }

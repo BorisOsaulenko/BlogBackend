@@ -9,8 +9,7 @@ interface credentials {
 }
 
 export const update = async (token: string, updateCredentials: credentials) => {
-  const { email, password } = validateAuthTokenSignature(token);
-  const user = await checkCredentials(email, password);
+  const user = await validateAuthTokenSignature(token);
   if (!user) throw new CustomError(401, "Invalid credentials");
 
   const updatedUser = await Mongo.users().updateOne(

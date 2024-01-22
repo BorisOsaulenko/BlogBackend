@@ -1,24 +1,23 @@
 export interface Profile {
   userId: string;
-  name: string;
+  nickName: string;
   followers: string[];
   following: string[];
-  createdAt: Date;
+  createdAt: number;
+  avatarURL: string;
 
-  avatarURL?: string;
   livePlace?: string;
-  birthdate?: Date;
+  birthdate?: number;
   school?: string;
-  surname?: string;
   bio?: string;
 }
 
 export interface profileFieldsProvidedByUser {
-  name: string;
-  avatarURL?: string;
+  nickName: string;
+  avatarURL: string;
   livePlace?: string;
-  birthdate?: Date;
+  birthdate?: number;
   school?: string;
-  surname?: string;
   bio?: string;
 }
+//todo: implement blocking user

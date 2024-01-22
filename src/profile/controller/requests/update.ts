@@ -14,7 +14,7 @@ export const update = z
       .string()
       .min(2, { message: "Live place must be at least 2 characters long" })
       .optional(),
-    birthdate: z.date().optional(),
+    birthdate: z.number().optional(),
     school: z
       .string()
       .min(10, { message: "School must be at least 10 characters long" })

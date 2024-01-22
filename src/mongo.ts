@@ -3,11 +3,13 @@ import { User } from "./user/user";
 import { Profile } from "./profile/profile";
 import { Post } from "./post/post";
 import { Comment } from "./comment/comment";
+import { Tag } from "./tag/tag";
 
 const users = "users";
 const profiles = "profiles";
 const posts = "posts";
 const comments = "comments";
+const tags = "tags";
 
 export class Mongo {
   public static mongo: Db;
@@ -19,6 +21,7 @@ export class Mongo {
   public static profiles = () => Mongo.collection<Profile>(profiles);
   public static posts = () => Mongo.collection<Post>(posts);
   public static comments = () => Mongo.collection<Comment>(comments);
+  public static tags = () => Mongo.collection<Tag>(tags);
   private static collection = <T extends Document>(name: string) =>
     Mongo.mongo.collection<T>(name);
 }

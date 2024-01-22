@@ -1,12 +1,14 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { PostService } from "../service/service";
 import { postRequests } from "./requests/postRequests";
-import { getPostsByFilter } from "../repository/getPostsByFilter/getPostsByFilter";
-import moment from "moment";
+import { PostRepository } from "../repository/postRepository";
 
 export class PostController {
   public router = Router();
-  constructor() {
+  private postService: PostService;
+  constructor(postService: PostService) {
+    this.postService = postService;
+
     this.router.post("/post", this.create);
     this.router.get("/post/:paginationIdx", this.get);
     this.router.patch("/post", this.update);
@@ -17,7 +19,7 @@ export class PostController {
     const token = req.headers.authorization?.split(" ")[1];
 
     const post = await postRequests.create.parseAsync(req.body);
-    const createdPost = await PostService.create(token, post);
+    const createdPost = await this.postService.create(token, post);
     res.json(createdPost);
   };
 
@@ -33,25 +35,23 @@ export class PostController {
       sortBy,
     });
 
-    const posts = await getPostsByFilter(token, filter);
+    const posts = await this.postService.getByFilter(filter, token);
 
-    res.json(
-      posts.slice(Number(paginationIdx) * 20, Number(paginationIdx) * 20 + 20)
-    );
+    res.json(posts.slice(Number(paginationIdx) * 20, Number(paginationIdx) * 20 + 20));
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     const { postId } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
     const post = postRequests.update.parse(req.body);
-    const updatedPost = await PostService.update(token, postId, post);
+    const updatedPost = await this.postService.update(token, postId, post);
     res.json(updatedPost);
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const { postId } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
-    const deletedPost = await PostService.deletePost(token, postId);
+    const deletedPost = await this.postService.delete(token, postId);
     res.json(deletedPost);
   };
 }
