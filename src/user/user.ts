@@ -19,4 +19,4 @@ export enum Role {
   ADMIN = "ADMIN",
 }
 
-// test for github actions. Pray it to work
+// test for github actions. Pray 2 it to work
