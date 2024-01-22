@@ -1,5 +1,8 @@
-runtime: python39
-service: my-app
+runtime: nodejs16
+services:
+  - name: messenger
+    entrypoint: auto
+
 handlers:
-- url: /.*
-  script: auto
+  - url: /.*
+    script: auto
