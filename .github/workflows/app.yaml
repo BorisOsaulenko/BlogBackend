@@ -1,2 +1,2 @@
 runtime: nodejs20
-entrypoint: dist/app.js
+entrypoint: ./dist/app.js
