@@ -40,7 +40,7 @@
     "start": "node ./dist/app",
     "build": "tsc",
     "gcp-build": "tsc",
-    "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json nodemon --watch 'src//*.ts' --ignore 'src//*.spec.ts' --exec 'ts-node' src/app.ts"
+    "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/app.ts"
   },
   "repository": {
     "type": "git",

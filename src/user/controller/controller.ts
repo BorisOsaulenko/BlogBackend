@@ -18,11 +18,11 @@ export class UserController {
     const { email, password } = req.body;
 
     const user = await userRequests.registerRequest.parseAsync({
-      email,
-      password,
+      email: email as string,
+      password: password as string,
     });
 
-    await UserService.register(user);
+    await this.userService.register(user);
     res.status(200).json({ toastMessage: "Email was sent" });
   };
 
@@ -30,7 +30,7 @@ export class UserController {
     const { email, password } = req.query;
 
     const credentials = userRequests.loginRequest.parse({ email, password });
-    const user = await UserService.login(credentials.email, credentials.password);
+    const user = await this.userService.login(credentials.email, credentials.password);
 
     res.json(jwt.sign(user, process.env.JWT_SECRET as string));
   };
@@ -39,13 +39,13 @@ export class UserController {
     const token = req.headers["authorization"]?.split(" ")[1] as string;
     const newCredentials = await userRequests.updateRequest.parseAsync(req.body);
 
-    const user = await UserService.update(token, newCredentials);
+    const user = await this.userService.update(token, newCredentials);
     res.json(user);
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"]?.split(" ")[1] as string;
-    const user = await UserService.delete(token);
+    const user = await this.userService.delete(token);
     res.removeHeader("authorization");
     res.json(user);
   };
@@ -53,7 +53,7 @@ export class UserController {
   activation = async (req: Request, res: Response, next: NextFunction) => {
     const { email, code } = req.query;
 
-    const user = await UserService.activation(code as string, email as string);
+    const user = await this.userService.activation(code as string, email as string);
     res.header("authorization", `Bearer ${jwt.sign(user, process.env.JWT_SECRET as string)}`).redirect("/");
   };
 }

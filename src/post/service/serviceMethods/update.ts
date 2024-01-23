@@ -20,8 +20,5 @@ export const update = async (
   if (post.authorName !== profile.nickName)
     throw new CustomError(403, "You are not authorized to update this post");
 
-  return await Mongo.posts().updateOne(
-    { _id: new ObjectId(postId) },
-    { $set: update }
-  );
+  return await PostRepository.update(postId, update);
 };

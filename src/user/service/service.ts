@@ -6,22 +6,9 @@ import { activation } from "./serviceMethods/activation";
 import { Credentials } from "../user";
 
 export class UserService {
-  static async login(email: string, password: string) {
-    return await login(email, password);
-  }
-  static async register(creds: Credentials) {
-    return await register(creds);
-  }
-
-  static async update(token: string, updateCredentials: Partial<Credentials>) {
-    return await update(token, updateCredentials);
-  }
-
-  static async delete(token: string) {
-    return await deleteUser(token);
-  }
-
-  static async activation(email: string, token: string) {
-    return await activation(email, token);
-  }
+  login = login;
+  register = register;
+  update = update;
+  delete = deleteUser;
+  activation = activation;
 }

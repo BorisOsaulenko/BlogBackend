@@ -17,5 +17,5 @@ export const deletePost = async (token: string | undefined, postId: string) => {
   if (post.authorName !== profile.nickName)
     throw new CustomError(403, "You are not authorized to delete this post");
 
-  return await Mongo.posts().deleteOne({ _id: new ObjectId(postId) });
+  return await PostRepository.delete(postId);
 };

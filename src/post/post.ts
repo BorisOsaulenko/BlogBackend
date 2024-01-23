@@ -1,5 +1,3 @@
-import { Comment } from "../comment/comment";
-
 export interface Post {
   authorName: string;
   media: string[];

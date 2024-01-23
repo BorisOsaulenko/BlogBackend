@@ -1,7 +1,6 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { PostService } from "../service/service";
 import { postRequests } from "./requests/postRequests";
-import { PostRepository } from "../repository/postRepository";
 
 export class PostController {
   public router = Router();
@@ -19,7 +18,7 @@ export class PostController {
     const token = req.headers.authorization?.split(" ")[1];
 
     const post = await postRequests.create.parseAsync(req.body);
-    const createdPost = await this.postService.create(token, post);
+    const createdPost = await this.postService.create(post, token);
     res.json(createdPost);
   };
 
