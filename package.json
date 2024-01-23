@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.ts",
   "dependencies": {
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
@@ -35,8 +35,12 @@
     "typescript": "^5.1.6"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/app.ts"
+    "prepare": "npm run gcp-build",
+    "pretest": "npm run gcp-build",
+    "start": "node ./src/app",
+    "build": "tsc",
+    "gcp-build": "tsc",
+    "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json nodemon --watch 'src//*.ts' --ignore 'src//*.spec.ts' --exec 'ts-node' src/app.ts"
   },
   "repository": {
     "type": "git",
