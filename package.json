@@ -2,7 +2,7 @@
   "name": "back",
   "version": "1.0.0",
   "description": "",
-  "main": "app.ts",
+  "main": "app.js",
   "dependencies": {
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
@@ -37,7 +37,7 @@
   "scripts": {
     "prepare": "npm run gcp-build",
     "pretest": "npm run gcp-build",
-    "start": "node ./src/app.ts",
+    "start": "node ./dist/app",
     "build": "tsc",
     "gcp-build": "tsc",
     "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json nodemon --watch 'src//*.ts' --ignore 'src//*.spec.ts' --exec 'ts-node' src/app.ts"
