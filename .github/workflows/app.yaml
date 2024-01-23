@@ -1,2 +1,0 @@
-runtime: nodejs20
-entrypoint: dist/app.js
