@@ -12,7 +12,7 @@ export const errorMiddleware = (
   const message =
     error instanceof CustomError ? error.toastMessage : error.errors[0].message;
 
-  console.log(error);
+  console.log(message);
 
   response.status(status).json({
     toastMessage: message,
