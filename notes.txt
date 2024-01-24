@@ -1,6 +1,4 @@
-# Questions:
-
-1. How do i check does email exists - activation link - to be done
+1. How do i check does email exists - activation link - done
 2. patch vs put request logic - patch direct fields, put for whole object - done
 3. proper way to save tags - own tag db + user tags
 4. proper way to save media:
