@@ -9,21 +9,16 @@ export class env {
   public static NODE_ENV: string;
 
   public static checkEnvValid() {
-    this.DB_URL = process.env.DB_URL || "";
-    this.JWT_SECRET = process.env.JWT_SECRET || "";
-    this.NODE_ENV = process.env.NODE_ENV || "";
-    this.PORT = process.env.PORT || "";
-    if (!env.NODE_ENV) throw new Error("Missing environment variable: NODE_ENV");
+    this.PORT = process.env.PORT!;
+    this.DB_URL = process.env.DB_URL!;
+    this.JWT_SECRET = process.env.JWT_SECRET!;
+    this.NODE_ENV = process.env.NODE_ENV!;
     if (![env.prod, env.test, env.dev].includes(env.NODE_ENV)) {
-      throw new Error("Wrong environment variable: NODE_ENV");
+      throw new Error("NODE_ENV is not valid");
     }
-    if ([env.DB_URL, env.JWT_SECRET, env.NODE_ENV].includes("")) {
-      console.log(env.NODE_ENV, env.DB_URL, env.JWT_SECRET, env.PORT);
-
-      throw new Error("Missing environment variables");
-    }
-    if (env.NODE_ENV !== env.prod && !env.PORT) {
-      throw new Error("Missing environment variable: PORT");
+    if ([env.PORT, env.DB_URL, env.JWT_SECRET, env.NODE_ENV].some((x) => !x)) {
+      console.log([env.PORT, env.DB_URL, env.JWT_SECRET, env.NODE_ENV]);
+      throw new Error("Some env variables are not set");
     }
   }
 }

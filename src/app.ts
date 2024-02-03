@@ -18,7 +18,9 @@ import { PostService } from "./post/service/service";
 import { CommentService } from "./comment/service/service";
 import { env } from "./enviroment";
 
-config({ path: `.${process.env.NODE_ENV}.env` });
+console.log(process.env.NODE_ENV);
+
+config({ path: `./.${process.env.NODE_ENV}.env` });
 env.checkEnvValid();
 
 const controllers = [
