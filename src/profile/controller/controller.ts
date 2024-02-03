@@ -1,7 +1,6 @@
 import { Response, Request, Router, NextFunction } from "express";
 import { profileRequests } from "./requests/profileRequests";
 import { ProfileService } from "../service/service";
-import { profileRepository } from "../repository/profileRepository";
 
 export class ProfileController {
   public router = Router();
@@ -22,16 +21,15 @@ export class ProfileController {
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
-    const { name, email } = req.query;
-    const profile =
-      (await profileRepository.getByName(name as string)) || (await profileRepository.getByEmail(email as string));
-    res.json(profile);
+    const { nickName, email } = req.query;
+
+    const publicPartOfProfile = await this.profileService.get(nickName as string, email as string);
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     const profile = profileRequests.update.parse(req.body);
-    const updatedProfile = await this.profileService.update(token, profile);
+    const updatedProfile = await this.profileService.update(profile, token);
     res.json(updatedProfile);
   };
 

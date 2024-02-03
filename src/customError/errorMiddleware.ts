@@ -9,8 +9,7 @@ export const errorMiddleware = (
   next: NextFunction
 ) => {
   const status = error instanceof CustomError ? error.status : 400;
-  const message =
-    error instanceof CustomError ? error.toastMessage : error.errors[0].message;
+  const message = error instanceof CustomError ? error.toastMessage : error.errors[0].message;
 
   console.log(message);
 

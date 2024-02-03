@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { PostType } from "../../post";
-import { profileRepository } from "../../../profile/repository/profileRepository";
+import { UserRepository } from "../../../user/repository/userRepository";
 
 export const create = z
   .object({
@@ -25,11 +25,20 @@ export const create = z
         z
           .string()
           .email("invalid email")
-          .refine(async (email) => await profileRepository.getByEmail(email), {
+          .refine(async (email) => await UserRepository.getByEmail(email), {
             message: "user not found",
           })
       )
-      .min(1, "at least one user is required")
+      .min(1, "at least one allowed user is required")
+      .optional(),
+    blockedUsers: z
+      .array(
+        z
+          .string()
+          .email("invalid email")
+          .refine(async (email) => await UserRepository.getByEmail(email))
+      )
+      .min(1, "at least one blocked user is required")
       .optional(),
   })
   .refine(

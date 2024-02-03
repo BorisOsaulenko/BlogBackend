@@ -12,7 +12,11 @@ export class UserController {
     this.router.get("/user", this.login);
     this.router.patch("/user", this.update);
     this.router.delete("/user", this.delete);
-    this.router.get("/activation", this.activation);
+    this.router.put("/user/follow", this.follow);
+    this.router.put("/user/unfollow", this.unfollow);
+    this.router.put("/user/likePost", this.likePost);
+    this.router.put("/user/unlikePost", this.unlikePost);
+    this.router.get("/user/activation", this.activation);
   }
   createNewUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
@@ -23,7 +27,7 @@ export class UserController {
     });
 
     await this.userService.register(user);
-    res.status(200).json({ toastMessage: "Email was sent" });
+    res.status(200).json();
   };
 
   login = async (req: Request, res: Response, next: NextFunction) => {
@@ -50,10 +54,38 @@ export class UserController {
     res.json(user);
   };
 
+  follow = async (req: Request, res: Response, next: NextFunction) => {
+    const { profileNickName } = req.body;
+    const token = req.headers["authorization"]?.split(" ")[1];
+    await this.userService.follow(profileNickName, token);
+    res.status(200).json();
+  };
+
+  unfollow = async (req: Request, res: Response, next: NextFunction) => {
+    const { profileNickName } = req.body;
+    const token = req.headers["authorization"]?.split(" ")[1];
+    await this.userService.unfollow(profileNickName, token);
+    res.status(200).json();
+  };
+
+  likePost = async (req: Request, res: Response, next: NextFunction) => {
+    const { postId } = req.body;
+    const token = req.headers["authorization"]?.split(" ")[1];
+    await this.userService.likePost(postId, token);
+    res.status(200).json();
+  };
+
+  unlikePost = async (req: Request, res: Response, next: NextFunction) => {
+    const { postId } = req.body;
+    const token = req.headers["authorization"]?.split(" ")[1];
+    await this.userService.unlikePost(postId, token);
+    res.status(200).json();
+  };
+
   activation = async (req: Request, res: Response, next: NextFunction) => {
     const { email, code } = req.query;
 
     const user = await this.userService.activation(code as string, email as string);
-    res.header("authorization", `Bearer ${jwt.sign(user, process.env.JWT_SECRET as string)}`).redirect("/");
+    res.status(200).json(jwt.sign(user, process.env.JWT_SECRET as string));
   };
 }

@@ -5,6 +5,6 @@ import { PostRepository, postFilter } from "../../repository/postRepository";
 
 export const getByFilter = async (filter: postFilter, token?: string): Promise<Post[]> => {
   const user = await validateAuthTokenSignature(token);
-  const posts = await PostRepository.getPostsByFilter(user, filter);
+  const posts = await PostRepository.getByFilter(user, filter);
   return accessManager(user, posts);
 };

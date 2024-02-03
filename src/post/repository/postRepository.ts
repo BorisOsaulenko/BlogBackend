@@ -5,10 +5,10 @@ import { generateMongoFilter, mongoFilter } from "./getByFilter/mongoFilter";
 import { sortByEnum } from "../controller/requests/filter";
 import { sort } from "./getByFilter/sort";
 import { User } from "../../user/user";
-import { accessManager } from "./getByFilter/accessManager";
+import { checkIsUserAllowedUnderPost } from "../../utils/checkIsUserAllowedUnderPost";
 
 export interface postFilter {
-  authorName?: string;
+  authorNickName?: string;
   tags?: string[];
   dateFrom?: number;
   dateTo?: number;
@@ -28,30 +28,37 @@ export class PostRepository {
     await Mongo.posts().deleteOne({ _id: new ObjectId(id) });
   };
 
-  static getPostById = async (id: string): Promise<Post | null> => {
+  static getById = async (id: string): Promise<Post | null> => {
     return await Mongo.posts().findOne({ _id: new ObjectId(id) });
   };
 
-  static getPostsByAuthor = async (name: string): Promise<Post[]> => {
-    return await Mongo.posts().find({ authorName: name }).toArray();
+  static getByAuthor = async (nickName: string): Promise<Post[]> => {
+    return await Mongo.posts().find({ authorNickName: nickName }).toArray();
   };
 
-  static getPostsByDates = async (dateFrom: number, dateTo: number): Promise<Post[]> => {
+  static getByDates = async (dateFrom: number, dateTo: number): Promise<Post[]> => {
     return await Mongo.posts()
       .find({ posted: { $gte: dateFrom, $lte: dateTo } })
       .toArray();
   };
 
-  static getPostsByTags = async (tags: string[]): Promise<Post[]> => {
+  static getByTags = async (tags: string[]): Promise<Post[]> => {
     return await Mongo.posts()
       .find({ tags: { $in: tags } })
       .toArray();
   };
 
-  static getPostsByFilter = async (user: User, filter: postFilter): Promise<WithId<Post>[]> => {
-    const { authorName, tags, dateFrom, dateTo, sortBy } = filter;
-    const mongoFilter: mongoFilter = generateMongoFilter(tags, authorName, dateFrom, dateTo);
-    const posts = await Mongo.posts().find(mongoFilter, { limit: 1000 }).toArray();
-    return sort(accessManager(user, posts), sortBy || sortByEnum.popular);
+  static getByFilter = async (user: User, filter: postFilter): Promise<WithId<Post>[]> => {
+    const { authorNickName, tags, dateFrom, dateTo, sortBy } = filter;
+    const mongoFilter: mongoFilter = generateMongoFilter(tags, authorNickName, dateFrom, dateTo);
+    let posts = await Mongo.posts().find(mongoFilter, { limit: 1000 }).toArray();
+    posts = posts
+      .map((post) => (checkIsUserAllowedUnderPost(user, post) ? post : null))
+      .filter((p) => p !== null) as WithId<Post>[]; //only posts that user is allowed to see
+    posts = sort(posts, sortBy || sortByEnum.popular);
+    return posts.map((post) => {
+      const { allowedUsers, blockedUsers, ...publicPart } = post;
+      return publicPart;
+    });
   };
 }

@@ -1,3 +1,6 @@
 dist/
 .prettierrc
 .notes.txt
+.gcloudignore
+.env
+node_modules

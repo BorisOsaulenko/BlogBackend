@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { checkDoesUserExists } from "../../../utils/checkDoesUserExists";
+import { UserRepository } from "../../repository/userRepository";
 
 export const registerRequest = z.object({
   email: z
     .string({ required_error: "Email is required" })
     .email("Invalid email")
-    .refine(async (email) => !(await checkDoesUserExists(email)), {
+    .refine(async (email) => !(await UserRepository.getByEmail(email)), {
       message: "User already exists",
     }),
   password: z

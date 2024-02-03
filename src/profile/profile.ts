@@ -2,7 +2,6 @@ export interface Profile {
   userId: string;
   nickName: string;
   followers: string[];
-  following: string[];
   createdAt: number;
   avatarURL: string;
 
@@ -13,6 +12,7 @@ export interface Profile {
 }
 
 export interface profileFieldsProvidedByUser {
+  //same as public part of Profile
   nickName: string;
   avatarURL: string;
   livePlace?: string;

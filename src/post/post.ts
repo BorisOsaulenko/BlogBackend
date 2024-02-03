@@ -1,7 +1,8 @@
 export interface Post {
-  authorName: string;
+  authorNickName: string;
   media: string[];
-  likes: string[];
+  likes: string[]; // emails of who put likes
+  dislikes: string[];
   type: PostType;
   views: number;
   tags: string[];
@@ -9,6 +10,7 @@ export interface Post {
   allowComments: boolean;
   authorAvatar: string;
   allowedUsers?: string[]; // for private posts
+  blockedUsers?: string[]; // for all posts
 }
 
 export interface postFieldsProvidedByUser {
@@ -17,6 +19,7 @@ export interface postFieldsProvidedByUser {
   type: PostType;
   allowComments: boolean;
   allowedUsers?: string[];
+  blockedUsers?: string[];
 }
 
 export enum PostType {

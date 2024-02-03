@@ -1,27 +1,36 @@
 import { Mongo } from "../../../mongo";
-import { profileFieldsProvidedByUser } from "../../profile";
+import { Profile, profileFieldsProvidedByUser } from "../../profile";
 
-export const update = async (
-  email: string,
-  profile: Partial<profileFieldsProvidedByUser>
-): Promise<void> => {
-  const user = await Mongo.users().findOne({ email });
-  const previousProfile = await Mongo.profiles().findOne({
-    userId: String(user?._id),
-  });
+export const update = async (nickName: string, profile: Partial<profileFieldsProvidedByUser>): Promise<void> => {
+  const previousProfile = (await Mongo.profiles().findOne({ nickName })) as Profile;
+
   if (profile.nickName || profile.avatarURL) {
     await Mongo.posts().updateMany(
-      { authorName: previousProfile?.nickName },
+      { authorNickName: previousProfile?.nickName },
       {
         $set: {
-          authorName: profile.nickName || previousProfile?.nickName,
+          authorNickName: profile.nickName || previousProfile?.nickName,
           authorAvatar: profile.avatarURL || previousProfile?.avatarURL,
         },
       }
     );
+
+    //update every user who is following profile:
+    Mongo.users().updateMany(
+      {
+        following: {
+          $elemMatch: {
+            nickName: previousProfile.nickName,
+          },
+        },
+      },
+      {
+        $set: {
+          "following.$.nickName": profile.nickName || previousProfile?.nickName,
+          "following.$.avatarURL": profile.avatarURL || previousProfile?.avatarURL,
+        },
+      }
+    );
   }
-  await Mongo.profiles().updateOne(
-    { userId: String(user?._id) },
-    { $set: profile }
-  );
+  await Mongo.profiles().updateOne({ nickName }, { $set: profile });
 };

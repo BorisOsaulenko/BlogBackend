@@ -24,12 +24,12 @@ export class PostController {
 
   get = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
-    const { tags, author, posted, sortBy } = req.query; // author is profile name
+    const { tags, authorNickName, posted, sortBy } = req.query;
     const { paginationIdx } = req.params;
 
     const filter = postRequests.filter.parse({
       tags,
-      author,
+      authorNickName,
       posted: (posted as string[])?.map((p) => Number(p)), //timestamp
       sortBy,
     });

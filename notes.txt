@@ -12,3 +12,14 @@ date js
 8. proper way to increase views
 9. tag controller admin checking repeating
 10. comment - replies logic
+
+logic to implement:
+    - private post comment check is user allowed - done 
+    - post block user - done
+    - add/remove follower (user who is following dont have to have a profile) - done
+    - add/remove following (user who is being followed must have a profile) - done
+    - add/remove post like
+    - add/remove comment like
+    - add/remove comment reply like
+    - add post view
+    - allowComments logic - done

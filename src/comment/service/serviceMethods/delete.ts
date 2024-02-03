@@ -1,24 +1,29 @@
-import { ObjectId } from "mongodb";
 import { CustomError } from "../../../customError/error";
-import { Mongo } from "../../../mongo";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
-import { CommentRepository } from "../../repository/comment";
-import { profileRepository } from "../../../profile/repository/profileRepository";
+import { CommentRepository } from "../../repository/commentRepository";
+import { ProfileRepository } from "../../../profile/repository/profileRepository";
+import { PostRepository } from "../../../post/repository/postRepository";
 
 export const deleteComment = async (id: string, token?: string) => {
+  if (!token) throw new CustomError(401, "Not authorized");
   const user = await validateAuthTokenSignature(token);
-  const profile = await profileRepository.getByEmail(user.email);
-  const comment = await CommentRepository.getCommentById(id);
-  if (!profile) throw new CustomError(404, "Profile needed to comment");
-  if (!comment) throw new CustomError(404, "Comment not found");
-  if (profile.nickName !== comment.authorName)
-    throw new CustomError(
-      401,
-      "You dont have permission to delete this comment"
-    );
 
-  const deletedComment = await Mongo.comments().deleteOne({
-    _id: new ObjectId(id),
-  });
-  return deleteComment;
+  const profile = await ProfileRepository.getByEmail(user.email);
+  if (!profile) throw new CustomError(404, "Profile needed to comment");
+
+  const comment = await CommentRepository.getById(id);
+  if (!comment) throw new CustomError(404, "Comment not found");
+
+  if (profile.nickName === comment.authorNickName) {
+    const deletedComment = await CommentRepository.delete(id);
+    return deletedComment;
+  }
+
+  const post = await PostRepository.getById(comment?.postId as string);
+  if (post?.authorNickName === profile.nickName) {
+    const deletedComment = await CommentRepository.delete(id);
+    return deletedComment;
+  }
+
+  throw new CustomError(401, "You dont have permission to delete this comment");
 };

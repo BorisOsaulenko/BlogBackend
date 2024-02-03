@@ -16,8 +16,10 @@ import { TagController } from "./tag/controller/controller";
 import { TagService } from "./tag/service/service";
 import { PostService } from "./post/service/service";
 import { CommentService } from "./comment/service/service";
+import { env } from "./enviroment";
 
-config();
+config({ path: `.${process.env.NODE_ENV}.env` });
+env.checkEnvValid();
 
 const controllers = [
   new UserController(new UserService()),
@@ -37,10 +39,8 @@ const app = express()
 
   .use(errorMiddleware);
 
-Mongo.connect(process.env.DB_URL!)
-  .then(() =>
-    app.listen(process.env.PORT || 3000, () =>
-      console.log("Server started on port: " + process.env.PORT || 3000)
-    )
-  )
+Mongo.connect(env.DB_URL)
+  .then(() => app.listen(env.PORT, () => console.log("Server started on port: " + env.PORT)))
   .catch(console.log);
+
+export default app;

@@ -10,7 +10,7 @@ export const accessManager = (user: User, posts: WithId<Post>[]): WithId<Post>[]
     });
 
     const sponsorsFilter = privatePostFilter.filter((post) => {
-      if (post.type === PostType.SPONSORS) return user.sponsors.includes(post.authorName);
+      if (post.type === PostType.SPONSORS) return user.sponsors.includes(post.authorNickName);
     });
 
     return sponsorsFilter;

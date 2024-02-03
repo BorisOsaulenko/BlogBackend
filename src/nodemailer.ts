@@ -21,7 +21,5 @@ export const sendActivationEmail = (email: string, link: string) => {
 
   transporter.sendMail(activationEmail, (err, info) => {
     if (err) return console.log(err);
-    console.log("Message sent: %s", info.messageId);
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
   });
 };

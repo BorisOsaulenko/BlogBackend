@@ -1,5 +1,3 @@
-"use strict";
-
 import { loginRequest } from "./login";
 import { registerRequest } from "./register";
 import { updateRequest } from "./update";
