@@ -1,24 +1,21 @@
-export class env {
-  private static prod = "prod";
-  private static test = "test";
-  private static dev = "dev";
+import { config } from "dotenv";
+if (
+  process.env.NODE_ENV &&
+  ["test", "dev", "prod"].includes(process.env.NODE_ENV)
+)
+  config({ path: `./.${process.env.NODE_ENV}.env` });
+else throw new Error("NODE_ENV is not defined");
 
-  public static PORT: string;
-  public static DB_URL: string;
-  public static JWT_SECRET: string;
-  public static NODE_ENV: string;
+const env = {
+  DB_URL: process.env.DB_URL as string,
+  PORT: process.env.PORT as string,
+  NODE_ENV: process.env.NODE_ENV as string,
+  JWT_SECRET: process.env.JWT_SECRET as string,
+};
 
-  public static checkEnvValid() {
-    this.PORT = process.env.PORT!;
-    this.DB_URL = process.env.DB_URL!;
-    this.JWT_SECRET = process.env.JWT_SECRET!;
-    this.NODE_ENV = process.env.NODE_ENV!;
-    if (![env.prod, env.test, env.dev].includes(env.NODE_ENV)) {
-      throw new Error("NODE_ENV is not valid");
-    }
-    if ([env.PORT, env.DB_URL, env.JWT_SECRET, env.NODE_ENV].some((x) => !x)) {
-      console.log([env.PORT, env.DB_URL, env.JWT_SECRET, env.NODE_ENV]);
-      throw new Error("Some env variables are not set");
-    }
-  }
-}
+if (!env.DB_URL) throw new Error("DB_URL is not defined");
+if (!env.PORT) throw new Error("PORT is not defined");
+if (!env.NODE_ENV) throw new Error("NODE_ENV is not defined");
+if (!env.JWT_SECRET) throw new Error("JWT_SECRET is not defined");
+
+export default env;

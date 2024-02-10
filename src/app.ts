@@ -16,12 +16,7 @@ import { TagController } from "./tag/controller/controller";
 import { TagService } from "./tag/service/service";
 import { PostService } from "./post/service/service";
 import { CommentService } from "./comment/service/service";
-import { env } from "./enviroment";
-
-console.log(process.env.NODE_ENV);
-
-config({ path: `./.${process.env.NODE_ENV}.env` });
-env.checkEnvValid();
+import env from "./enviroment";
 
 const controllers = [
   new UserController(new UserService()),
