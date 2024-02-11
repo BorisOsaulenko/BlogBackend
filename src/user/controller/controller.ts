@@ -2,6 +2,7 @@ import { Response, Request, Router, NextFunction } from "express";
 import { userRequests } from "./requests/userRequests";
 import jwt from "jsonwebtoken";
 import { UserService } from "../service/service";
+import env from "../../enviroment";
 
 export class UserController {
   public router = Router();
@@ -27,21 +28,26 @@ export class UserController {
     });
 
     await this.userService.register(user);
-    res.status(200).json();
+    res.json();
   };
 
   login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.query;
 
     const credentials = userRequests.loginRequest.parse({ email, password });
-    const user = await this.userService.login(credentials.email, credentials.password);
+    const user = await this.userService.login(
+      credentials.email,
+      credentials.password
+    );
 
-    res.json(jwt.sign(user, process.env.JWT_SECRET as string));
+    res.json(jwt.sign(user, env.JWT_SECRET));
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers["authorization"]?.split(" ")[1] as string;
-    const newCredentials = await userRequests.updateRequest.parseAsync(req.body);
+    const newCredentials = await userRequests.updateRequest.parseAsync(
+      req.body
+    );
 
     const user = await this.userService.update(token, newCredentials);
     res.json(user);
@@ -85,7 +91,10 @@ export class UserController {
   activation = async (req: Request, res: Response, next: NextFunction) => {
     const { email, code } = req.query;
 
-    const user = await this.userService.activation(code as string, email as string);
-    res.status(200).json(jwt.sign(user, process.env.JWT_SECRET as string));
+    const user = await this.userService.activation(
+      code as string,
+      email as string
+    );
+    res.status(200).json(jwt.sign(user, env.JWT_SECRET));
   };
 }

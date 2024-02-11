@@ -15,7 +15,7 @@ export const register = async (creds: Credentials) => {
     activationNumber,
     isActive: false,
     roles: [Role.USER],
-    createdAt: new Date(),
+    createdAt: Date.now(),
     sponsors: [],
     following: [],
     likedPosts: [],

@@ -6,7 +6,7 @@ export interface User {
   following: { nickName: string; avatarURL: string }[]; // list of emails
   activationNumber: number;
   isActive: boolean;
-  createdAt: Date;
+  createdAt: Number;
   likedPosts: string[];
 }
 
@@ -20,5 +20,3 @@ export enum Role {
   SPONSOR = "SPONSOR",
   ADMIN = "ADMIN",
 }
-
-// test for github actions. Pray 5 it to work
