@@ -17,7 +17,7 @@ export class PostController {
   create = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
 
-    const post = await postRequests.create.parseAsync(req.body);
+    const post = postRequests.create.parse(req.body);
     const createdPost = await this.postService.create(post, token);
     res.json(createdPost);
   };

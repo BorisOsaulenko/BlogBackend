@@ -1,7 +1,6 @@
-import { checkCredentials } from "../../../utils/checkCredentials";
-import { Mongo } from "../../../mongo";
 import { CustomError } from "../../../customError/error";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
+import { UserRepository } from "../../repository/userRepository";
 
 interface credentials {
   email?: string;
@@ -12,14 +11,16 @@ export const update = async (token: string, updateCredentials: credentials) => {
   const user = await validateAuthTokenSignature(token);
   if (!user) throw new CustomError(401, "Invalid credentials");
 
-  const updatedUser = await Mongo.users().updateOne(
-    { email: user.email },
-    {
-      $set: {
-        email: updateCredentials.email || user.email,
-        password: updateCredentials.password || user.password,
-      },
-    }
+  if (updateCredentials.email) {
+    const existingUser = await UserRepository.getByEmail(
+      updateCredentials?.email
+    );
+    if (existingUser) throw new CustomError(400, "Email already in use");
+  }
+
+  const updatedUser = await UserRepository.updateByEmail(
+    user.email,
+    updateCredentials
   );
 
   return updatedUser;

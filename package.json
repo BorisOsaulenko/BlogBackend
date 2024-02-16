@@ -47,7 +47,7 @@
     "build": "tsc",
     "gcp-build": "tsc",
     "dev": "GOOGLE_APPLICATION_CREDENTIALS=keys/google.json NODE_ENV=dev nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/app.ts",
-    "test": "NODE_ENV=test jest"
+    "test": "NODE_ENV=test jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",

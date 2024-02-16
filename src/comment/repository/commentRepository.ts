@@ -4,13 +4,11 @@ import { Comment } from "../comment";
 
 export class CommentRepository {
   static getById = async (id: string): Promise<Comment | null> => {
-    return await Mongo.comments().findOne({ _id: new ObjectId(id) }, { projection: { _id: 0 } });
+    return await Mongo.comments().findOne({ _id: new ObjectId(id) });
   };
 
   static getByPostId = async (postId: string): Promise<Comment[] | null> => {
-    return await Mongo.comments()
-      .find({ postId }, { projection: { _id: 0 } })
-      .toArray();
+    return await Mongo.comments().find({ postId }).toArray();
   };
 
   static create = async (comment: Comment): Promise<void> => {

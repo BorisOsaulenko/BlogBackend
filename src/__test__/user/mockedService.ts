@@ -12,13 +12,13 @@ mockedUserService.login = jest
       email,
       password,
       roles: [Role.USER],
-      sponsors: [],
-      following: [],
-      likedPosts: [],
       createdAt: Date.now(),
       isActive: true,
       activationNumber: 1000000, // million
     };
   });
+
+mockedUserService.update = jest.fn().mockReturnValueOnce(Promise<void>);
+mockedUserService.delete = jest.fn().mockReturnValueOnce(Promise<void>);
 
 export { mockedUserService };

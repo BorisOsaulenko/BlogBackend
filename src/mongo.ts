@@ -4,6 +4,7 @@ import { Profile } from "./profile/profile";
 import { Post } from "./post/post";
 import { Comment } from "./comment/comment";
 import { Tag } from "./tag/tag";
+import { UserActivity } from "./userActivity/userActivity";
 
 const users = "users";
 const profiles = "profiles";
@@ -21,10 +22,13 @@ export class Mongo {
     return this.mongo;
   }
   public static disconnect = () => this.client.close();
+  public static userActivity = () =>
+    Mongo.collection<UserActivity>("userActivity");
   public static users = () => Mongo.collection<User>(users);
   public static profiles = () => Mongo.collection<Profile>(profiles);
   public static posts = () => Mongo.collection<Post>(posts);
   public static comments = () => Mongo.collection<Comment>(comments);
   public static tags = () => Mongo.collection<Tag>(tags);
-  private static collection = <T extends Document>(name: string) => Mongo.mongo.collection<T>(name);
+  private static collection = <T extends Document>(name: string) =>
+    Mongo.mongo.collection<T>(name);
 }

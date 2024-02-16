@@ -21,23 +21,11 @@ export const create = z
     }),
     allowComments: z.boolean().optional().default(true),
     allowedUsers: z //string of emails only if post type is private
-      .array(
-        z
-          .string()
-          .email("invalid email")
-          .refine(async (email) => await UserRepository.getByEmail(email), {
-            message: "user not found",
-          })
-      )
+      .array(z.string().email("invalid email"))
       .min(1, "at least one allowed user is required")
       .optional(),
     blockedUsers: z
-      .array(
-        z
-          .string()
-          .email("invalid email")
-          .refine(async (email) => await UserRepository.getByEmail(email))
-      )
+      .array(z.string().email("invalid email"))
       .min(1, "at least one blocked user is required")
       .optional(),
   })

@@ -16,8 +16,5 @@ export const register = async (creds: Credentials) => {
     isActive: false,
     roles: [Role.USER],
     createdAt: Date.now(),
-    sponsors: [],
-    following: [],
-    likedPosts: [],
   });
 };

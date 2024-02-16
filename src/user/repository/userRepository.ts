@@ -8,7 +8,10 @@ export class UserRepository {
   }
 
   static async getById(id: string): Promise<User | null> {
-    return await Mongo.users().findOne({ _id: new ObjectId(id) }, { projection: { _id: 0 } });
+    return await Mongo.users().findOne(
+      { _id: new ObjectId(id) },
+      { projection: { _id: 0 } }
+    );
   }
 
   static async getByEmail(email: string): Promise<User | null> {
@@ -17,15 +20,21 @@ export class UserRepository {
 
   static async getByProfileName(name: string): Promise<User | null> {
     const profile = await Mongo.profiles().findOne({ name });
-    return await Mongo.users().findOne({ _id: new ObjectId(profile?.userId) }, { projection: { _id: 0 } });
+    return await Mongo.users().findOne(
+      { _id: new ObjectId(profile?.userId) },
+      { projection: { _id: 0 } }
+    );
   }
 
-  static async update(id: string, user: User): Promise<void> {
+  static async updateByEmail(
+    email: string,
+    user: Partial<User>
+  ): Promise<void> {
+    await Mongo.users().updateOne({ email }, { $set: user });
+  }
+
+  static async updateById(id: string, user: Partial<User>): Promise<void> {
     await Mongo.users().updateOne({ _id: new ObjectId(id) }, { $set: user });
-  }
-
-  static async updateByFields(id: string, fields: Partial<User>): Promise<void> {
-    await Mongo.users().updateOne({ _id: new ObjectId(id) }, { $set: fields });
   }
 
   public static async follow(email: string, nickName: string): Promise<void> {
@@ -36,7 +45,9 @@ export class UserRepository {
     );
     await Mongo.users().updateOne(
       { email },
-      { $push: { following: { nickName, avatarURL: profile.value!.avatarURL } } }
+      {
+        $push: { following: { nickName, avatarURL: profile.value!.avatarURL } },
+      }
     );
     return;
   }
@@ -49,7 +60,9 @@ export class UserRepository {
     );
     await Mongo.users().updateOne(
       { email },
-      { $pull: { following: { nickName, avatarURL: profile.value!.avatarURL } } }
+      {
+        $pull: { following: { nickName, avatarURL: profile.value!.avatarURL } },
+      }
     );
   }
 
@@ -58,12 +71,18 @@ export class UserRepository {
   }
 
   public static async likePost(email: string, postId: string): Promise<void> {
-    await Mongo.posts().updateOne({ _id: new ObjectId(postId) }, { $push: { likes: email } });
+    await Mongo.posts().updateOne(
+      { _id: new ObjectId(postId) },
+      { $push: { likes: email } }
+    );
     await Mongo.users().updateOne({ email }, { $push: { likedPosts: postId } });
   }
 
   public static async unlikePost(email: string, postId: string): Promise<void> {
-    await Mongo.posts().updateOne({ _id: new ObjectId(postId) }, { $pull: { likes: email } });
+    await Mongo.posts().updateOne(
+      { _id: new ObjectId(postId) },
+      { $pull: { likes: email } }
+    );
     await Mongo.users().updateOne({ email }, { $pull: { likedPosts: postId } });
   }
 

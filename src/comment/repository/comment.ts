@@ -6,16 +6,11 @@ export class CommentRepository {
   constructor() {}
 
   static getCommentById = (id: string): Promise<Comment | null> => {
-    return Mongo.comments().findOne(
-      { _id: new ObjectId(id) },
-      { projection: { _id: 0 } }
-    );
+    return Mongo.comments().findOne({ _id: new ObjectId(id) });
   };
 
   static getCommentsByPostId = (postId: string): Promise<Comment[] | null> => {
-    return Mongo.comments()
-      .find({ postId }, { projection: { _id: 0 } })
-      .toArray();
+    return Mongo.comments().find({ postId }).toArray();
   };
 
   static create = (comment: Comment): void => {

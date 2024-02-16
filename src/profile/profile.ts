@@ -4,6 +4,7 @@ export interface Profile {
   followers: string[];
   createdAt: number;
   avatarURL: string;
+  sponsors: string[]; // user is sponsoring, not being sponsored by
 
   livePlace?: string;
   birthdate?: number;
@@ -20,4 +21,3 @@ export interface profileFieldsProvidedByUser {
   school?: string;
   bio?: string;
 }
-//todo: implement blocking user
