@@ -8,7 +8,7 @@ import { CommentRepository } from "../../repository/commentRepository";
 export const create = async (postId: string, content: string, token?: string) => {
   if (!content) throw new CustomError(400, "Content is required");
 
-  const user = await validateAuthTokenSignature(token); //todo: implement blocking users
+  const user = await validateAuthTokenSignature(token); 
   const profile = await ProfileRepository.getByEmail(user.email);
   if (!profile) throw new CustomError(404, "Profile needed to comment");
 

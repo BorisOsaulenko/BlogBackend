@@ -37,53 +37,8 @@ export class UserRepository {
     await Mongo.users().updateOne({ _id: new ObjectId(id) }, { $set: user });
   }
 
-  public static async follow(email: string, nickName: string): Promise<void> {
-    const profile = await Mongo.profiles().findOneAndUpdate(
-      { nickName },
-      { $push: { followers: email } },
-      { returnDocument: "after" }
-    );
-    await Mongo.users().updateOne(
-      { email },
-      {
-        $push: { following: { nickName, avatarURL: profile.value!.avatarURL } },
-      }
-    );
-    return;
-  }
-
-  public static async unfollow(email: string, nickName: string): Promise<void> {
-    const profile = await Mongo.profiles().findOneAndUpdate(
-      { nickName },
-      { $pull: { followers: email } },
-      { returnDocument: "after" }
-    );
-    await Mongo.users().updateOne(
-      { email },
-      {
-        $pull: { following: { nickName, avatarURL: profile.value!.avatarURL } },
-      }
-    );
-  }
-
   static async activation(email: string): Promise<void> {
     await Mongo.users().updateOne({ email }, { $set: { isActive: true } });
-  }
-
-  public static async likePost(email: string, postId: string): Promise<void> {
-    await Mongo.posts().updateOne(
-      { _id: new ObjectId(postId) },
-      { $push: { likes: email } }
-    );
-    await Mongo.users().updateOne({ email }, { $push: { likedPosts: postId } });
-  }
-
-  public static async unlikePost(email: string, postId: string): Promise<void> {
-    await Mongo.posts().updateOne(
-      { _id: new ObjectId(postId) },
-      { $pull: { likes: email } }
-    );
-    await Mongo.users().updateOne({ email }, { $pull: { likedPosts: postId } });
   }
 
   static async deleteById(id: string): Promise<void> {

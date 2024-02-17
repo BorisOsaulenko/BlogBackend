@@ -15,7 +15,7 @@ export class UserController {
     this.router.delete("/user", this.delete);
   }
   createNewUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body; //only email and password so user cannot create other data
 
     const user = await userRequests.registerRequest.parseAsync({
       email: email as string,

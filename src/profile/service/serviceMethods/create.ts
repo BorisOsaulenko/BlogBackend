@@ -3,17 +3,21 @@ import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSign
 import { profileFieldsProvidedByUser as profileFieldsProvidedByUser } from "../../profile";
 import { ProfileRepository } from "../../repository/profileRepository";
 
-export const create = async (token: string | undefined, profile: profileFieldsProvidedByUser) => {
+export const create = async (
+  profile: profileFieldsProvidedByUser,
+  token?: string
+) => {
   const user = await validateAuthTokenSignature(token);
-  if (await ProfileRepository.getByEmail(user.email)) throw new CustomError(409, "Profile already exists");
+  if (await ProfileRepository.getByEmail(user.email))
+    throw new CustomError(409, "Profile already exists");
 
-  const createdProfile = await ProfileRepository.create(
+  await ProfileRepository.createByEmail(
     {
       ...profile,
       createdAt: Date.now(),
       followers: [],
+      sponsors: [],
     },
     user.email
   );
-  return createdProfile;
 };

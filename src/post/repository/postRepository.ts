@@ -3,9 +3,6 @@ import { Mongo } from "../../mongo";
 import { Post } from "../post";
 import { generateMongoFilter, mongoFilter } from "./getByFilter/mongoFilter";
 import { sortByEnum } from "../controller/requests/filter";
-import { sort } from "./getByFilter/sort";
-import { User } from "../../user/user";
-import { checkIsUserAllowedUnderPost } from "../../utils/checkIsUserAllowedUnderPost";
 
 export interface postFilter {
   authorNickName?: string;
@@ -36,7 +33,10 @@ export class PostRepository {
     return await Mongo.posts().find({ authorNickName: nickName }).toArray();
   };
 
-  static getByDates = async (dateFrom: number, dateTo: number): Promise<Post[]> => {
+  static getByDates = async (
+    dateFrom: number,
+    dateTo: number
+  ): Promise<Post[]> => {
     return await Mongo.posts()
       .find({ posted: { $gte: dateFrom, $lte: dateTo } })
       .toArray();
@@ -48,17 +48,8 @@ export class PostRepository {
       .toArray();
   };
 
-  static getByFilter = async (user: User, filter: postFilter): Promise<WithId<Post>[]> => {
-    const { authorNickName, tags, dateFrom, dateTo, sortBy } = filter;
-    const mongoFilter: mongoFilter = generateMongoFilter(tags, authorNickName, dateFrom, dateTo);
-    let posts = await Mongo.posts().find(mongoFilter, { limit: 1000 }).toArray();
-    posts = posts
-      .map((post) => (checkIsUserAllowedUnderPost(user, post) ? post : null))
-      .filter((p) => p !== null) as WithId<Post>[]; //only posts that user is allowed to see
-    posts = sort(posts, sortBy || sortByEnum.popular);
-    return posts.map((post) => {
-      const { allowedUsers, blockedUsers, ...publicPart } = post;
-      return publicPart;
-    });
+  static getByFilter = async (filter: postFilter): Promise<WithId<Post>[]> => {
+    const mongoFilter: mongoFilter = generateMongoFilter(filter);
+    return await Mongo.posts().find(mongoFilter, { limit: 1000 }).toArray();
   };
 }

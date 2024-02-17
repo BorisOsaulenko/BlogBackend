@@ -1,6 +1,6 @@
 import { WithId } from "mongodb";
-import { sortByEnum } from "../../controller/requests/filter";
-import { Post } from "../../post";
+import { sortByEnum } from "../../../controller/requests/filter";
+import { Post } from "../../../post";
 
 export const sort = (posts: WithId<Post>[], sortBy: sortByEnum) => {
   switch (sortBy) {

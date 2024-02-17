@@ -7,17 +7,22 @@ export interface mongoFilter extends Filter<Post> {
   posted?: { $gt: number; $lt: number };
 }
 
-export const generateMongoFilter = (
-  tags?: string[],
-  authorNickName?: string,
-  dateFrom?: number,
-  dateTo?: number
-): mongoFilter => {
+export interface userFilter {
+  tags?: string[];
+  authorNickName?: string;
+  dateFrom?: number;
+  dateTo?: number;
+}
+
+export const generateMongoFilter = (filter: userFilter): mongoFilter => {
+  const { tags, authorNickName, dateFrom, dateTo } = filter;
   const mongoFilter: mongoFilter = {};
 
   if (tags !== undefined) mongoFilter["tags"] = { $in: tags };
-  if (authorNickName !== undefined) mongoFilter["authorNickName"] = authorNickName;
-  if (dateFrom !== undefined && dateTo !== undefined) mongoFilter["posted"] = { $gt: dateFrom, $lt: dateTo };
+  if (authorNickName !== undefined)
+    mongoFilter["authorNickName"] = authorNickName;
+  if (dateFrom !== undefined && dateTo !== undefined)
+    mongoFilter["posted"] = { $gt: dateFrom, $lt: dateTo };
 
   return mongoFilter;
 };

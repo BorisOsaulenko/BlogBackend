@@ -12,7 +12,13 @@ export class ProfileRepository {
   public static getByEmail = getByEmail;
   public static update = update;
 
-  public static async create(profile: Omit<Profile, "userId">, email: string): Promise<void> {
+  public static async create(profile: Profile): Promise<void> {
+    await Mongo.profiles().insertOne(profile);
+  }
+  public static async createByEmail(
+    profile: Omit<Profile, "userId">,
+    email: string
+  ): Promise<void> {
     const user = await Mongo.users().findOne({ email });
     await Mongo.profiles().insertOne({ ...profile, userId: String(user?._id) });
   }

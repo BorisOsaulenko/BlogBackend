@@ -16,7 +16,7 @@ export class ProfileController {
     const token = req.headers.authorization?.split(" ")[1];
 
     const profile = await profileRequests.create.parseAsync(req.body);
-    const createdProfile = await this.profileService.create(token, profile);
+    const createdProfile = await this.profileService.create(profile, token);
     res.json(createdProfile);
   };
 
