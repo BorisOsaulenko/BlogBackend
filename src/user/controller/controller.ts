@@ -52,42 +52,4 @@ export class UserController {
 
     res.json(user);
   };
-
-  // follow = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { profileNickName } = req.body;
-  //   const token = req.headers["authorization"]?.split(" ")[1];
-  //   await this.userService.follow(profileNickName, token);
-  //   res.status(200).json();
-  // };
-
-  // unfollow = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { profileNickName } = req.body;
-  //   const token = req.headers["authorization"]?.split(" ")[1];
-  //   await this.userService.unfollow(profileNickName, token);
-  //   res.status(200).json();
-  // };
-
-  // likePost = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { postId } = req.body;
-  //   const token = req.headers["authorization"]?.split(" ")[1];
-  //   await this.userService.likePost(postId, token);
-  //   res.status(200).json();
-  // };
-
-  // unlikePost = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { postId } = req.body;
-  //   const token = req.headers["authorization"]?.split(" ")[1];
-  //   await this.userService.unlikePost(postId, token);
-  //   res.status(200).json();
-  // };
-
-  // activation = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { email, code } = req.query;
-
-  //   const user = await this.userService.activation(
-  //     code as string,
-  //     email as string
-  //   );
-  //   res.status(200).json(jwt.sign(user, env.JWT_SECRET));
-  // };
 }

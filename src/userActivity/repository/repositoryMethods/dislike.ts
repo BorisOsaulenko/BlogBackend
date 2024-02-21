@@ -1,11 +1,13 @@
 import { ObjectId } from "mongodb";
 import { Mongo } from "../../../mongo";
+import { UserActivityRepository } from "../repository";
 
-export const dislike = async (
+export const dislike = async function (
+  this: UserActivityRepository,
   postId: string,
   userEmail: string
-): Promise<void> => {
-  const user = await Mongo.users().findOne({ email: userEmail });
+): Promise<void> {
+  const user = await this.userRepository.getByEmail(userEmail);
 
   Mongo.userActivity().updateOne(
     { userId: String(user?._id) },

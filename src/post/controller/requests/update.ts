@@ -17,31 +17,22 @@ export const update = z
     type: z.nativeEnum(PostType, { invalid_type_error: "invalid post type" }),
     allowComments: z.boolean(),
     allowedUsers: z
-      .array(
-        z
-          .string()
-          .email("invalid email")
-          .refine(async (email) => {
-            await UserRepository.getByEmail(email);
-          })
-      )
+      .array(z.string().email("invalid email"))
       .min(1, "at least one user is required"),
-    blockedUsers: z.array(
-      z
-        .string()
-        .email("invalid email")
-        .refine(async (email) => {
-          await UserRepository.getByEmail(email);
-        })
-    ),
+    blockedUsers: z.array(z.string().email("invalid email")),
   })
   .partial()
-  .refine((updatePost) => Object.values(updatePost).find((value) => value !== undefined), {
-    message: "at least one update field is required",
-  })
+  .refine(
+    (updatePost) =>
+      Object.values(updatePost).find((value) => value !== undefined),
+    {
+      message: "at least one update field is required",
+    }
+  )
   .refine(
     (updatePost) => {
-      if (updatePost.type === PostType.PRIVATE && !updatePost.allowedUsers) return false;
+      if (updatePost.type === PostType.PRIVATE && !updatePost.allowedUsers)
+        return false;
       return true;
     },
     {

@@ -3,7 +3,7 @@ import { UserActivityService } from "../service/service";
 
 export class UserController {
   public router = Router();
-  private userActivityService: UserActivityService;
+  userActivityService: UserActivityService;
   constructor(userActivityService: UserActivityService) {
     this.userActivityService = userActivityService;
     this.router.get("/userActivity", this.get);
@@ -16,20 +16,10 @@ export class UserController {
     const token = req.headers.authorization?.split(" ")[1];
     const { userId, userEmail } = req.query;
 
-    let userActivity;
-    if (userId) {
-      userActivity = await this.userActivityService.getById(
-        userId as string,
-        token
-      );
-    } else if (userEmail) {
-      userActivity = await this.userActivityService.getByEmail(
-        userEmail as string,
-        token
-      );
-    } else {
-      res.status(400).json("user email is required");
-    }
+    const userActivity = await this.userActivityService.getById(
+      userId as string,
+      token
+    );
     res.json(userActivity);
   };
 

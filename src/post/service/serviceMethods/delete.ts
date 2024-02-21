@@ -2,11 +2,16 @@ import { CustomError } from "../../../customError/error";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
 import { ProfileRepository } from "../../../profile/repository/profileRepository";
 import { PostRepository } from "../../repository/postRepository";
+import { PostService } from "../service";
 
-export const deletePost = async (token: string | undefined, postId: string) => {
-  const user = await validateAuthTokenSignature(token);
+export const deletePost = async function (
+  this: PostService,
+  postId: string,
+  token?: string
+) {
+  const user = await validateAuthTokenSignature(this.userRepository, token);
 
-  const profile = await ProfileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByEmail(user.email);
   if (!profile) throw new CustomError(404, "Profile not found");
 
   const post = await PostRepository.getById(postId);

@@ -1,10 +1,10 @@
-import { ProfileRepository } from "../../../profile/repository/profileRepository";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
-import { UserRepository } from "../../repository/userRepository";
+import { UserService } from "../service";
 
-export const deleteUser = async (token: string) => {
-  const user = await validateAuthTokenSignature(token);
+export const deleteUser = async function (this: UserService, token?: string) {
+  const user = await validateAuthTokenSignature(this.userRepository, token);
   if (!user) throw new Error("Invalid credentials");
-  await ProfileRepository.deleteByEmail(user.email);
-  return UserRepository.deleteByEmail(user.email);
+  await this.profileRepository.deleteByEmail(user.email);
+  await this.userActivatityRepository.deleteByUserEmail(user.email);
+  return this.userRepository.deleteByEmail(user.email);
 };

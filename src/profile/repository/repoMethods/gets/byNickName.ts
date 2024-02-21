@@ -4,8 +4,5 @@ import { Profile } from "../../../profile";
 export const getByNickName = async (
   nickName?: string
 ): Promise<Profile | null> => {
-  return await Mongo.profiles().findOne(
-    { nickName },
-    { projection: { userId: 0 } }
-  );
+  return await Mongo.profiles().findOne({ nickName });
 };

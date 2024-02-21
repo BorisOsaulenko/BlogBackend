@@ -7,15 +7,33 @@ import { unfollow } from "./repositoryMethods/unfollow";
 import { like } from "./repositoryMethods/like";
 import { dislike } from "./repositoryMethods/dislike";
 import { removeLikeSign } from "./repositoryMethods/removeLikeSign";
+import { UserRepository } from "../../user/repository/userRepository";
+import { deleteById } from "./repositoryMethods/deleteById";
+import { deleteByUserEmail } from "./repositoryMethods/deleteByUserEmail";
+import { deleteByUserId } from "./repositoryMethods/deleteByUserId";
+import { ProfileRepository } from "../../profile/repository/profileRepository";
 
 export class UserActivityRepository {
-  public static createById = createById;
-  public static createByEmail = createByEmail;
-  public static getById = getById;
-  public static getByEmail = getByEmail;
-  public static follow = follow;
-  public static unfollow = unfollow;
-  public static like = like;
-  public static dislike = dislike;
-  public static removeLikeSign = removeLikeSign;
+  protected userRepository: UserRepository;
+  protected profileRepository: ProfileRepository;
+
+  constructor(
+    userRepository: UserRepository,
+    profileRepository: ProfileRepository
+  ) {
+    this.profileRepository = profileRepository;
+    this.userRepository = userRepository;
+  }
+  public createById = createById.bind(this);
+  public createByEmail = createByEmail.bind(this);
+  public getById = getById.bind(this);
+  public getByEmail = getByEmail.bind(this);
+  public follow = follow.bind(this);
+  public unfollow = unfollow.bind(this);
+  public like = like.bind(this);
+  public dislike = dislike.bind(this);
+  public removeLikeSign = removeLikeSign.bind(this);
+  public deleteById = deleteById.bind(this);
+  public deleteByUserEmail = deleteByUserEmail.bind(this);
+  public deleteByUserId = deleteByUserId.bind(this);
 }

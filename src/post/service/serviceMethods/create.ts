@@ -3,11 +3,16 @@ import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSign
 import { ProfileRepository } from "../../../profile/repository/profileRepository";
 import { CustomError } from "../../../customError/error";
 import { PostRepository } from "../../repository/postRepository";
+import { PostService } from "../service";
 
-export const create = async (post: postFieldsProvidedByUser, token?: string) => {
-  const user = await validateAuthTokenSignature(token);
+export const create = async function (
+  this: PostService,
+  post: postFieldsProvidedByUser,
+  token?: string
+) {
+  const user = await validateAuthTokenSignature(this.userRepository, token);
 
-  const profile = await ProfileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByEmail(user.email);
   if (!profile) throw new CustomError(404, "Profile not found");
 
   return await PostRepository.create({

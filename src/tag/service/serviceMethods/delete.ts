@@ -4,9 +4,14 @@ import { Role } from "../../../user/user";
 import { checkCredentials } from "../../../utils/checkCredentials";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
 import { CustomError } from "../../../customError/error";
+import { TagService } from "../service";
 
-export const deleteTag = async (id: string, token?: string) => {
-  const user = await validateAuthTokenSignature(token);
+export const deleteTag = async function (
+  this: TagService,
+  id: string,
+  token?: string
+) {
+  const user = await validateAuthTokenSignature(this.userRepository, token);
   if (user.roles.includes(Role.ADMIN)) {
     const deletedTag = await Mongo.tags().deleteOne({ _id: new ObjectId(id) });
     return deletedTag;

@@ -1,5 +1,5 @@
 import { Request, Response, Router, NextFunction } from "express";
-import { get } from "../repository/get";
+import { get } from "../repository/repositoryMethods/get";
 import { TagService } from "../service/service";
 
 export class TagController {
@@ -27,7 +27,7 @@ export class TagController {
     const token = req.headers.authorization?.split(" ")[1];
     const { prefix } = req.query;
 
-    const tags = await get(prefix as string, token);
+    const tags = await this.tagService.get(prefix as string, token);
     res.json(tags);
   };
 

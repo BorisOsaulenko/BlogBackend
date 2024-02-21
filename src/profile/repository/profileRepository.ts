@@ -5,34 +5,63 @@ import { getById } from "./repoMethods/gets/byId";
 import { getByNickName } from "./repoMethods/gets/byNickName";
 import { getByEmail } from "./repoMethods/gets/byEmail";
 import { update } from "./repoMethods/update";
+import { UserRepository } from "../../user/repository/userRepository";
 
 export class ProfileRepository {
-  public static getById = getById;
-  public static getByNickName = getByNickName;
-  public static getByEmail = getByEmail;
-  public static update = update;
+  private userRepository: UserRepository;
 
-  public static async create(profile: Profile): Promise<void> {
+  constructor(userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
+
+  public async create(profile: Profile): Promise<void> {
     await Mongo.profiles().insertOne(profile);
   }
-  public static async createByEmail(
+  public async createByEmail(
     profile: Omit<Profile, "userId">,
     email: string
   ): Promise<void> {
-    const user = await Mongo.users().findOne({ email });
+    const user = await this.userRepository.getByEmail(email);
     await Mongo.profiles().insertOne({ ...profile, userId: String(user?._id) });
   }
 
-  public static async deleteById(id: string): Promise<void> {
+  public getById = getById;
+  public getByNickName = getByNickName;
+  public getByEmail = getByEmail;
+  public update = update;
+
+  public async addFollower(nickName: string, userEmail: string) {
+    Mongo.profiles().updateOne(
+      { nickName },
+      {
+        $push: {
+          followers: userEmail,
+        },
+      }
+    );
+  }
+
+  public async removeFollower(nickName: string, userEmail: string) {
+    Mongo.profiles().updateOne(
+      { nickName },
+      {
+        $pull: {
+          followers: userEmail,
+        },
+      }
+    );
+  }
+
+  public async deleteById(id: string): Promise<void> {
     await Mongo.profiles().deleteOne({ _id: new ObjectId(id) });
   }
 
-  public static async deleteByNickName(nickName: string): Promise<void> {
+  public async deleteByNickName(nickName: string): Promise<void> {
     await Mongo.profiles().deleteOne({ nickName });
   }
 
-  public static async deleteByEmail(email: string): Promise<void> {
-    const user = await Mongo.users().findOne({ email });
+  public async deleteByEmail(email: string): Promise<void> {
+    const user = await this.userRepository.getByEmail(email);
     await Mongo.profiles().deleteOne({ userId: String(user?._id) });
   }
 }

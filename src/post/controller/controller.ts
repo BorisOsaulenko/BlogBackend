@@ -43,14 +43,14 @@ export class PostController {
     const { postId } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
     const post = postRequests.update.parse(req.body);
-    const updatedPost = await this.postService.update(token, postId, post);
+    const updatedPost = await this.postService.update(postId, post, token);
     res.json(updatedPost);
   };
 
   delete = async (req: Request, res: Response, next: NextFunction) => {
     const { postId } = req.body;
     const token = req.headers.authorization?.split(" ")[1];
-    const deletedPost = await this.postService.delete(token, postId);
+    const deletedPost = await this.postService.delete(postId, token);
     res.json(deletedPost);
   };
 }
