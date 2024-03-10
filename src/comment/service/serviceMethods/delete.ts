@@ -13,7 +13,7 @@ export const deleteComment = async function (
   if (!token) throw new CustomError(401, "Not authorized");
   const user = await validateAuthTokenSignature(this.userRepository, token);
 
-  const profile = await this.profileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByUserId(user._id.toString());
   if (!profile) throw new CustomError(404, "Profile needed to comment");
 
   const comment = await this.commentRepository.getById(id);

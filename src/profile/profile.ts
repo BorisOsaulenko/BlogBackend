@@ -1,7 +1,7 @@
 export interface Profile {
   userId: string;
   nickName: string;
-  followers: string[];
+  followers: string[]; // ids of users who are following
   createdAt: number;
   avatarURL: string;
   sponsors: string[]; // user is sponsoring, not being sponsored by

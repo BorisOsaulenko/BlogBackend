@@ -1,13 +1,11 @@
-import { createByEmail } from "./serviceMethods/createByEmail";
-import { createById } from "./serviceMethods/createById";
-import { getById } from "./serviceMethods/getById";
-import { getByEmail } from "./serviceMethods/getByEmail";
-import { toggleProfileFollow } from "./serviceMethods/toggleProfileFollow";
-import { togglePostLike } from "./serviceMethods/togglePostLike";
-import { togglePostDislike } from "./serviceMethods/togglePostDislike";
+import { create } from "./serviceMethods/create";
+import { followProfile } from "./serviceMethods/followProfile";
+import { like } from "./serviceMethods/like";
+import { dislike } from "./serviceMethods/dislike";
 import { UserActivityRepository } from "../repository/repository";
 import { UserRepository } from "../../user/repository/userRepository";
 import { ProfileRepository } from "../../profile/repository/profileRepository";
+import { get } from "./serviceMethods/get";
 
 export class UserActivityService {
   protected userActivityRepository: UserActivityRepository;
@@ -23,11 +21,9 @@ export class UserActivityService {
     this.profileRepository = profileRepository;
   }
 
-  createById = createById.bind(this);
-  createByEmail = createByEmail.bind(this);
-  getById = getById.bind(this);
-  getByEmail = getByEmail.bind(this);
-  toggleProfileFollow = toggleProfileFollow.bind(this);
-  togglePostLike = togglePostLike.bind(this);
-  togglePostDislike = togglePostDislike.bind(this);
+  create = create.bind(this);
+  get = get.bind(this);
+  followProfile = followProfile.bind(this);
+  like = like.bind(this);
+  dislike = dislike.bind(this);
 }

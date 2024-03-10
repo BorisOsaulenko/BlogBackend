@@ -16,11 +16,8 @@ import { UserService } from "./user/service/service";
 import { UserActivityRepository } from "./userActivity/repository/repository";
 
 const userRepostiory = new UserRepository();
-const profileRepostiory = new ProfileRepository(userRepostiory);
-const userActivityRepostiory = new UserActivityRepository(
-  userRepostiory,
-  profileRepostiory
-);
+const profileRepostiory = new ProfileRepository();
+const userActivityRepostiory = new UserActivityRepository();
 
 const tagRepository = new TagRepository();
 const postRepository = new PostRepository();

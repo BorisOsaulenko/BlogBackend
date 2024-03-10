@@ -14,7 +14,7 @@ export const getByFilter = async function (
 ): Promise<Post[]> {
   const user = await validateAuthTokenSignature(this.userRepository, token);
   const posts = await PostRepository.getByFilter(filter);
-  const profile = await this.profileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByUserId(user._id.toString());
   const postsUserCanAccess = posts.filter((post) =>
     checkIsUserAllowedUnderPost(user, post, profile as Profile)
   );

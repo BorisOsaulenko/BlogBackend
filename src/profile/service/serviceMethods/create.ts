@@ -10,16 +10,14 @@ export const create = async function (
   token?: string
 ) {
   const user = await validateAuthTokenSignature(this.userRepository, token);
-  if (await this.profileRepository.getByEmail(user.email))
+  if (await this.profileRepository.getByUserId(user._id.toString()))
     throw new CustomError(409, "Profile already exists");
 
-  await this.profileRepository.createByEmail(
-    {
-      ...profile,
-      createdAt: Date.now(),
-      followers: [],
-      sponsors: [],
-    },
-    user.email
-  );
+  await this.profileRepository.create({
+    ...profile,
+    userId: user._id.toString(),
+    createdAt: Date.now(),
+    followers: [],
+    sponsors: [],
+  });
 };

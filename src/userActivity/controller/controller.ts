@@ -7,48 +7,36 @@ export class UserController {
   constructor(userActivityService: UserActivityService) {
     this.userActivityService = userActivityService;
     this.router.get("/userActivity", this.get);
-    this.router.put("/userActivity/followProfile", this.toggleProfileFollow);
-    this.router.put("/userActivity/likePost", this.togglePostLike);
-    this.router.put("/userActivity/dislikePost", this.togglePostDislike);
+    this.router.put("/userActivity/followProfile", this.followProfile);
+    this.router.put("/userActivity/likePost", this.likePost);
+    this.router.put("/userActivity/dislikePost", this.dislikePost);
   }
 
   get = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
-    const { userId, userEmail } = req.query;
 
-    const userActivity = await this.userActivityService.getById(
-      userId as string,
-      token
-    );
+    const userActivity = await this.userActivityService.get(token);
     res.json(userActivity);
   };
 
-  toggleProfileFollow = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  followProfile = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     const { profileId } = req.body;
 
-    await this.userActivityService.toggleProfileFollow(profileId, token);
+    await this.userActivityService.followProfile(profileId, token);
   };
 
-  togglePostLike = async (req: Request, res: Response, next: NextFunction) => {
+  likePost = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     const { postId } = req.body;
 
-    await this.userActivityService.togglePostLike(postId, token);
+    await this.userActivityService.like(postId, token);
   };
 
-  togglePostDislike = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) => {
+  dislikePost = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(" ")[1];
     const { postId } = req.body;
 
-    await this.userActivityService.togglePostDislike(postId, token);
+    await this.userActivityService.dislike(postId, token);
   };
 }

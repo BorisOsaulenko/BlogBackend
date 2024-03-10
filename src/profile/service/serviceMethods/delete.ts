@@ -7,5 +7,5 @@ export const deleteProfile = async function (
   token?: string
 ) {
   const user = await validateAuthTokenSignature(this.userRepository, token);
-  return await this.profileRepository.deleteByEmail(user.email);
+  return await this.profileRepository.deleteByUserId(user._id.toString());
 };

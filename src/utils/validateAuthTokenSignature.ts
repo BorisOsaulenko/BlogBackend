@@ -8,14 +8,14 @@ import { UserRepository } from "../user/repository/userRepository";
 export const validateAuthTokenSignature = async (
   userRepository: UserRepository,
   token?: string
-): Promise<User> => {
+): Promise<WithId<User>> => {
   if (!token) throw new CustomError(401, "Invalid token");
 
   try {
     const user = jwt.verify(
       token,
       process.env.JWT_SECRET as string
-    ) as unknown as User;
+    ) as unknown as WithId<User>;
 
     await checkCredentials(user.email, user.password, userRepository);
     return user;

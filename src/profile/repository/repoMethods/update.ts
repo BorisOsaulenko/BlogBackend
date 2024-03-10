@@ -1,8 +1,15 @@
 import { Mongo } from "../../../mongo";
 import { Profile, profileFieldsProvidedByUser } from "../../profile";
+import { ProfileRepository } from "../profileRepository";
 
-export const update = async (nickName: string, profile: Partial<profileFieldsProvidedByUser>): Promise<void> => {
-  const previousProfile = (await Mongo.profiles().findOne({ nickName })) as Profile;
+export const update = async function (
+  this: ProfileRepository,
+  nickName: string,
+  profile: Partial<profileFieldsProvidedByUser>
+): Promise<void> {
+  const previousProfile = (await Mongo.profiles().findOne({
+    nickName,
+  })) as Profile;
 
   if (profile.nickName || profile.avatarURL) {
     await Mongo.posts().updateMany(
@@ -27,7 +34,8 @@ export const update = async (nickName: string, profile: Partial<profileFieldsPro
       {
         $set: {
           "following.$.nickName": profile.nickName || previousProfile?.nickName,
-          "following.$.avatarURL": profile.avatarURL || previousProfile?.avatarURL,
+          "following.$.avatarURL":
+            profile.avatarURL || previousProfile?.avatarURL,
         },
       }
     );

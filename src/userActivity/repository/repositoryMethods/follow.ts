@@ -1,27 +1,20 @@
 import { Mongo } from "../../../mongo";
+import { Profile } from "../../../profile/profile";
+import { UserActivityRepository } from "../repository";
 
-export const follow = async (
-  nickName: string, // nickname of profile to be followed
-  userEmail: string // who is following
-): Promise<void> => {
-  const profile = await Mongo.profiles().findOne({ nickName });
-  const user = await Mongo.users().findOne({ email: userEmail });
-  Mongo.userActivity().updateOne(
-    { userId: String(user?._id) },
+export const follow = async function (
+  this: UserActivityRepository,
+  profileToFollow: Profile,
+  userId: string
+): Promise<void> {
+  await Mongo.userActivities().updateOne(
+    { userId },
     {
       $push: {
         following: {
-          nickName: profile?.nickName as string, //checking for nulls in service layer
-          avatarURL: profile?.avatarURL as string,
+          nickName: profileToFollow.nickName,
+          avatarURL: profileToFollow.avatarURL,
         },
-      },
-    }
-  );
-  Mongo.profiles().updateOne(
-    { nickName },
-    {
-      $push: {
-        followers: userEmail,
       },
     }
   );

@@ -1,17 +1,8 @@
-import { ProfileRepository } from "../../repository/profileRepository";
 import { ProfileService } from "../service";
 
-export const get = async function (
-  this: ProfileService,
-  nickName?: string,
-  email?: string
-) {
+export const get = async function (this: ProfileService, nickName: string) {
   let profile;
-  if (nickName) {
-    profile = await this.profileRepository.getByNickName(nickName);
-  } else if (email) {
-    profile = await this.profileRepository.getByEmail(email);
-  }
+  profile = await this.profileRepository.getByNickName(nickName);
 
   if (!profile) throw new Error("Profile not found");
   const { userId, followers, ...publicPartOfProfile } = profile;

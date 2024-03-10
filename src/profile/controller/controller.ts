@@ -21,9 +21,11 @@ export class ProfileController {
   };
 
   get = async (req: Request, res: Response, next: NextFunction) => {
-    const { nickName, email } = req.query;
+    const { nickName } = req.query;
 
-    const publicPartOfProfile = await this.profileService.get(nickName as string, email as string);
+    const publicPartOfProfile = await this.profileService.get(
+      nickName as string
+    );
   };
 
   update = async (req: Request, res: Response, next: NextFunction) => {

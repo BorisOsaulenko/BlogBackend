@@ -11,7 +11,7 @@ export const deletePost = async function (
 ) {
   const user = await validateAuthTokenSignature(this.userRepository, token);
 
-  const profile = await this.profileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByUserId(user._id.toString());
   if (!profile) throw new CustomError(404, "Profile not found");
 
   const post = await PostRepository.getById(postId);

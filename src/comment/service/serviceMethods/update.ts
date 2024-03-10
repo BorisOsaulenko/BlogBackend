@@ -15,7 +15,7 @@ export const update = async function (
   if (!content) throw new CustomError(400, "Content is required");
 
   const user = await validateAuthTokenSignature(this.userRepository, token);
-  const profile = await this.profileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByUserId(user._id.toString());
   const comment = await this.commentRepository.getById(id);
   if (!comment) throw new CustomError(404, "Comment not found");
   if (!profile) throw new CustomError(404, "Profile needed to comment");

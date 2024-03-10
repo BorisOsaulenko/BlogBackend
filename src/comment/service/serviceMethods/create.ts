@@ -1,9 +1,7 @@
 import { CustomError } from "../../../customError/error";
 import { PostRepository } from "../../../post/repository/postRepository";
-import { ProfileRepository } from "../../../profile/repository/profileRepository";
 import { checkIsUserAllowedUnderPost } from "../../../utils/checkIsUserAllowedUnderPost";
 import { validateAuthTokenSignature } from "../../../utils/validateAuthTokenSignature";
-import { CommentRepository } from "../../repository/commentRepository";
 import { CommentService } from "../service";
 
 export const create = async function (
@@ -15,7 +13,7 @@ export const create = async function (
   if (!content) throw new CustomError(400, "Content is required");
 
   const user = await validateAuthTokenSignature(this.userRepository, token);
-  const profile = await this.profileRepository.getByEmail(user.email);
+  const profile = await this.profileRepository.getByUserId(user._id.toString());
   if (!profile) throw new CustomError(404, "Profile needed to comment");
 
   const post = await PostRepository.getById(postId);

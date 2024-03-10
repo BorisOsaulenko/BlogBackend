@@ -6,5 +6,5 @@ export const deleteById = async function (
   this: UserActivityRepository,
   id: string
 ): Promise<void> {
-  await Mongo.userActivity().deleteOne({ _id: new ObjectId(id) });
+  await Mongo.userActivities().deleteOne({ _id: new ObjectId(id) });
 };
